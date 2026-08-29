@@ -1,36 +1,16 @@
-import type { Paquete, Visita } from '../types'
-import type { VisitaOverride } from '../store/use-control-acceso-store'
+import type { Visita } from '../types'
 
 /**
- * Combina la lista base del mock del backend con el estado de cliente
- * (registros nuevos + overrides). Los registros locales van primero porque
- * son los más recientes.
+ * Combina las visitas del mock del backend con las que el residente
+ * pre-autorizó en el cliente, y aplica las cancelaciones locales. Las
+ * pre-autorizadas van primero porque son las más recientes.
  */
-export function mergePaquetes(
-  base: Paquete[],
-  locales: Paquete[],
-  entregas: Record<string, string>,
-): Paquete[] {
-  return [...locales, ...base].map((paquete) => {
-    const entregadoEn = entregas[paquete.id]
-    if (!entregadoEn) return paquete
-    return { ...paquete, estado: 'entregado', entregadoEn }
-  })
-}
-
 export function mergeVisitas(
   base: Visita[],
-  locales: Visita[],
-  overrides: Record<string, VisitaOverride>,
+  creadas: Visita[],
+  canceladas: Record<string, true>,
 ): Visita[] {
-  return [...locales, ...base].map((visita) => {
-    const override = overrides[visita.id]
-    if (!override) return visita
-    return {
-      ...visita,
-      estado: override.estado,
-      entradaEn: override.entradaEn ?? visita.entradaEn,
-      salidaEn: override.salidaEn ?? visita.salidaEn,
-    }
-  })
+  return [...creadas, ...base].map((visita) =>
+    canceladas[visita.id] ? { ...visita, estado: 'cancelada' } : visita,
+  )
 }

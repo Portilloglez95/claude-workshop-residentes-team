@@ -1,22 +1,24 @@
 /**
  * Tipos de la sección Control de Acceso (Paquetería + Visitas).
  *
+ * Esta sección es **solo para residentes**: cada residente ve únicamente lo
+ * de su unidad. La operación de portería (registrar paquetes, marcar
+ * entregas, entrada/salida de visitantes) vivirá en un acceso de
+ * administrador aparte, que se construye después.
+ *
  * Demo sin backend real: los datos "de servidor" viven mockeados en
- * `api/control-acceso.api.ts` y todas las mutaciones (registrar paquete,
- * marcar entregado, pre-autorizar visita, entrada/salida…) viven en el
- * cliente — ver `store/use-control-acceso-store.ts`.
+ * `api/control-acceso.api.ts`; lo que el residente hace desde la app
+ * (pre-autorizar / cancelar una visita, marcar notificaciones leídas) vive
+ * en el cliente — ver `store/use-control-acceso-store.ts`.
  */
-
-/** Vista activa. No hay login real: es un switch de UI. */
-export type Rol = 'porteria' | 'residente'
 
 export type EstadoPaquete = 'pendiente' | 'entregado'
 
 export type Paquete = {
   id: string
-  /** Nombre del residente tal como lo anota portería. */
+  /** Nombre del residente al que va dirigido. */
   residente: string
-  /** Unidad / departamento destino — sirve para filtrar la vista del residente. */
+  /** Unidad / departamento destino — la vista del residente filtra por esto. */
   unidad: string
   /** Mensajería u origen (Amazon, DHL, FedEx…). */
   mensajeria: string
@@ -40,7 +42,7 @@ export type Visita = {
   nombre: string
   /** Unidad / departamento que recibe la visita. */
   unidadDestino: string
-  /** Nombre del residente que recibe (para mostrar en portería). */
+  /** Nombre del residente que recibe. */
   residenteDestino: string
   motivo: MotivoVisita
   /** Número de identificación (INE, licencia…), si se capturó. */
@@ -50,11 +52,11 @@ export type Visita = {
   /** Foto de la identificación como data URL, o `null`. */
   fotoId: string | null
   estado: EstadoVisita
-  /** ISO 8601 — cuándo se creó el registro / la pre-autorización. */
+  /** ISO 8601 — cuándo se creó la pre-autorización. */
   creadaEn: string
-  /** ISO 8601 — entrada al condominio, o `null`. */
+  /** ISO 8601 — entrada al condominio (la registra portería), o `null`. */
   entradaEn: string | null
-  /** ISO 8601 — salida del condominio, o `null`. */
+  /** ISO 8601 — salida del condominio (la registra portería), o `null`. */
   salidaEn: string | null
   /** `true` si la pre-autorizó el residente desde la app (aún sin llegar). */
   preautorizada: boolean

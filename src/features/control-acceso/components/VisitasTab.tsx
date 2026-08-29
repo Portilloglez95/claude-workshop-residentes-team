@@ -32,37 +32,29 @@ function StatCard({ label, value }: { label: string; value: number }) {
 }
 
 export function VisitasTab() {
-  const rol = useControlAccesoStore((s) => s.rol)
   const visitasCreadas = useControlAccesoStore((s) => s.visitasCreadas)
-  const visitaOverrides = useControlAccesoStore((s) => s.visitaOverrides)
+  const visitasCanceladas = useControlAccesoStore((s) => s.visitasCanceladas)
 
   const { data: base, isLoading, isError } = useVisitas()
 
   const [busqueda, setBusqueda] = useState('')
   const [filtroEstado, setFiltroEstado] = useState<FiltroEstado>('todos')
 
+  // Solo las visitas dirigidas a la unidad del residente.
   const visitas = useMemo(() => {
     if (!base) return []
-    const merged = mergeVisitas(base, visitasCreadas, visitaOverrides)
-    const delRol =
-      rol === 'residente'
-        ? merged.filter(
-            (v) =>
-              v.unidadDestino.toLowerCase() === RESIDENTE_ACTUAL.unidad.toLowerCase(),
-          )
-        : merged
-    return sortVisitas(delRol)
-  }, [base, visitasCreadas, visitaOverrides, rol])
+    const merged = mergeVisitas(base, visitasCreadas, visitasCanceladas)
+    const mias = merged.filter(
+      (v) => v.unidadDestino.toLowerCase() === RESIDENTE_ACTUAL.unidad.toLowerCase(),
+    )
+    return sortVisitas(mias)
+  }, [base, visitasCreadas, visitasCanceladas])
 
   const visibles = useMemo(() => {
     const termino = busqueda.trim().toLowerCase()
     return visitas.filter((v) => {
       const coincideEstado = filtroEstado === 'todos' || v.estado === filtroEstado
-      const coincideTexto =
-        !termino ||
-        v.nombre.toLowerCase().includes(termino) ||
-        v.residenteDestino.toLowerCase().includes(termino) ||
-        v.unidadDestino.toLowerCase().includes(termino)
+      const coincideTexto = !termino || v.nombre.toLowerCase().includes(termino)
       return coincideEstado && coincideTexto
     })
   }, [visitas, busqueda, filtroEstado])
@@ -72,12 +64,10 @@ export function VisitasTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      {rol === 'residente' && (
-        <p className="text-muted-foreground text-sm">
-          Visitas de tu unidad ({RESIDENTE_ACTUAL.unidad}). Pre-autoriza una visita y
-          portería la verá con su foto al llegar.
-        </p>
-      )}
+      <p className="text-muted-foreground text-sm">
+        Pre-autoriza una visita con su foto y portería la identificará al llegar, sin
+        pedirle la identificación física.
+      </p>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <StatCard label="Esperadas" value={esperadas} />
@@ -88,18 +78,16 @@ export function VisitasTab() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,24rem)_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>
-              {rol === 'residente' ? 'Pre-autorizar visita' : 'Registrar visitante'}
-            </CardTitle>
+            <CardTitle>Pre-autorizar visita</CardTitle>
           </CardHeader>
           <CardContent>
-            <VisitaForm rol={rol} />
+            <VisitaForm />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>{rol === 'residente' ? 'Mis visitas' : 'Visitantes'}</CardTitle>
+            <CardTitle>Mis visitas</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -108,7 +96,7 @@ export function VisitasTab() {
                 <Input
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
-                  placeholder="Buscar por visitante o destino…"
+                  placeholder="Buscar por visitante…"
                   className="pl-8"
                 />
               </div>
@@ -144,7 +132,7 @@ export function VisitasTab() {
             {visibles.length > 0 && (
               <ul className="divide-y">
                 {visibles.map((visita) => (
-                  <VisitaItem key={visita.id} visita={visita} rol={rol} />
+                  <VisitaItem key={visita.id} visita={visita} />
                 ))}
               </ul>
             )}

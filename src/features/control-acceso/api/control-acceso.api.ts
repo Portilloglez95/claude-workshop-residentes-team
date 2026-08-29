@@ -9,9 +9,10 @@ function hace(dias: number, horas = 0): string {
 
 // TODO: reemplazar por `apiClient.get<Paquete[]>('/control-acceso/paquetes')`
 // y `apiClient.get<Visita[]>('/control-acceso/visitas')` cuando el backend
-// esté disponible. Se deja mockeado para construir la UI en paralelo sin
-// depender de la API. Las mutaciones viven en el cliente mientras tanto
-// (ver `store/use-control-acceso-store.ts`).
+// esté disponible; el backend ya debería devolver solo lo de la unidad del
+// residente autenticado. Mientras tanto se mockea el condominio completo y
+// la vista filtra por `RESIDENTE_ACTUAL.unidad`. Lo que el residente hace
+// (pre-autorizar / cancelar visita) vive en `store/use-control-acceso-store.ts`.
 
 const MOCK_PAQUETES: Paquete[] = [
   {
