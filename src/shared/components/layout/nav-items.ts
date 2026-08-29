@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   MessageCircle,
+  TriangleAlert,
   Users,
   Vote,
   Wallet,
