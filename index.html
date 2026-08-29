@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Acceso · Condominio</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__logo" aria-hidden="true">🏢</span>
+      <div>
+        <h1>Control de Acceso</h1>
+        <p>Demo · Gestión de Condominios</p>
+      </div>
+    </div>
+    <nav class="topbar__tabs" role="tablist" aria-label="Secciones">
+      <button class="tab tab--active" data-target="paqueteria" role="tab" aria-selected="true">📦 Paquetería</button>
+      <button class="tab" data-target="visitas" role="tab" aria-selected="false">🧑‍🤝‍🧑 Visitas</button>
+    </nav>
+  </header>
+
+  <main class="content">
+
+    <!-- ===================== PAQUETERÍA ===================== -->
+    <section id="paqueteria" class="panel panel--active" role="tabpanel">
+      <div class="panel__header">
+        <h2>Paquetería</h2>
+        <p>Registro y seguimiento de paquetes recibidos en portería.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-pendientes">0</span>
+          <span class="stat-card__label">Pendientes de entrega</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-entregados">0</span>
+          <span class="stat-card__label">Entregados hoy</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-total-paq">0</span>
+          <span class="stat-card__label">Total registrados</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <form class="card form" id="form-paquete">
+          <h3>Registrar nuevo paquete</h3>
+
+          <label for="paq-residente">Residente / Depto</label>
+          <input type="text" id="paq-residente" placeholder="Ej. Depto 302 - María López" required>
+
+          <label for="paq-mensajeria">Mensajería / Origen</label>
+          <input type="text" id="paq-mensajeria" placeholder="Ej. Amazon, DHL, FedEx" required>
+
+          <label for="paq-folio">Folio / Guía (opcional)</label>
+          <input type="text" id="paq-folio" placeholder="Ej. MX123456789">
+
+          <label for="paq-notas">Notas</label>
+          <textarea id="paq-notas" rows="2" placeholder="Ej. Caja grande, requiere firma"></textarea>
+
+          <button type="submit" class="btn btn--primary">Registrar paquete</button>
+        </form>
+
+        <div class="card">
+          <h3>Paquetes registrados</h3>
+          <div class="filter-row">
+            <input type="search" id="paq-buscar" placeholder="Buscar por residente o folio...">
+            <select id="paq-filtro-estado">
+              <option value="todos">Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="entregado">Entregados</option>
+            </select>
+          </div>
+          <ul class="list" id="lista-paquetes"></ul>
+          <p class="empty-state" id="paq-empty">No hay paquetes registrados aún.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== VISITAS ===================== -->
+    <section id="visitas" class="panel" role="tabpanel">
+      <div class="panel__header">
+        <h2>Visitas</h2>
+        <p>Registro de entrada y salida de visitantes al condominio.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-activas">0</span>
+          <span class="stat-card__label">Visitas activas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-finalizadas">0</span>
+          <span class="stat-card__label">Finalizadas hoy</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-total-vis">0</span>
+          <span class="stat-card__label">Total registradas</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <form class="card form" id="form-visita">
+          <h3>Registrar entrada de visitante</h3>
+
+          <label for="vis-nombre">Nombre del visitante</label>
+          <input type="text" id="vis-nombre" placeholder="Ej. Carlos Hernández" required>
+
+          <label for="vis-destino">Visita a (Residente / Depto)</label>
+          <input type="text" id="vis-destino" placeholder="Ej. Depto 105 - Ana Torres" required>
+
+          <label for="vis-motivo">Motivo</label>
+          <select id="vis-motivo">
+            <option value="Personal">Visita personal</option>
+            <option value="Servicio">Servicio / Mantenimiento</option>
+            <option value="Delivery">Repartidor</option>
+            <option value="Proveedor">Proveedor</option>
+            <option value="Otro">Otro</option>
+          </select>
+
+          <label for="vis-identificacion">Identificación (opcional)</label>
+          <input type="text" id="vis-identificacion" placeholder="Ej. INE 1234">
+
+          <button type="submit" class="btn btn--primary">Registrar entrada</button>
+        </form>
+
+        <div class="card">
+          <h3>Visitantes</h3>
+          <div class="filter-row">
+            <input type="search" id="vis-buscar" placeholder="Buscar por nombre o destino...">
+            <select id="vis-filtro-estado">
+              <option value="todos">Todos los estados</option>
+              <option value="activa">Activas</option>
+              <option value="finalizada">Finalizadas</option>
+            </select>
+          </div>
+          <ul class="list" id="lista-visitas"></ul>
+          <p class="empty-state" id="vis-empty">No hay visitas registradas aún.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Demo interna · Sección Control de Acceso (Roberto &amp; Lupita) · Sin integraciones ni backend</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
