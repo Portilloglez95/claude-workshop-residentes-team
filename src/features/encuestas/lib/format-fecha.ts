@@ -1,3 +1,5 @@
+import { diasParaCierre } from './estado-encuesta'
+
 const formatterFecha = new Intl.DateTimeFormat('es', {
   day: 'numeric',
   month: 'long',
@@ -5,8 +7,6 @@ const formatterFecha = new Intl.DateTimeFormat('es', {
 })
 
 const formatterRelativo = new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
-
-const MS_POR_DIA = 24 * 60 * 60 * 1000
 
 export function formatFechaEncuesta(fechaIso: string): string {
   return formatterFecha.format(new Date(fechaIso))
@@ -19,7 +19,5 @@ export function formatFechaEncuesta(fechaIso: string): string {
  */
 export function formatCierre(fechaIso: string, cerrada: boolean): string {
   if (cerrada) return `Cerró el ${formatFechaEncuesta(fechaIso)}`
-
-  const dias = Math.ceil((new Date(fechaIso).getTime() - Date.now()) / MS_POR_DIA)
-  return `Cierra ${formatterRelativo.format(dias, 'day')}`
+  return `Cierra ${formatterRelativo.format(diasParaCierre(fechaIso), 'day')}`
 }
