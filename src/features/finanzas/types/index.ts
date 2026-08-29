@@ -73,3 +73,58 @@ export type MorosidadFinanzas = {
   cobranzaMes: number
   unidades: UnidadMorosa[]
 }
+
+export type EstadoCargo = 'vencido' | 'por_vencer' | 'programado'
+
+export type CargoProximo = {
+  id: string
+  concepto: string
+  detalle: string
+  vence: string
+  diasRestantes: number
+  monto: number
+  estado: EstadoCargo
+}
+
+export type PagoMensual = {
+  /** Etiqueta corta para el eje x. */
+  etiqueta: string
+  /** Etiqueta completa para tooltip y vista de tabla. */
+  periodo: string
+  monto: number
+  estado: EstadoPago
+  /** Año calendario, para agregar el total del ejercicio en curso. */
+  anio: number
+}
+
+/** Métodos de pago guardados, para los accesos directos del panel. */
+export type MetodoPago = {
+  id: string
+  tipo: 'tarjeta' | 'spei' | 'domiciliacion'
+  etiqueta: string
+  detalle: string
+  activo: boolean
+}
+
+/**
+ * Payload del panel: lo que el residente necesita ver de un golpe al entrar
+ * (qué debe, cuándo vence, cómo va el año y cómo pagar).
+ */
+export type ResumenPanel = {
+  unidad: string
+  porPagar: number
+  vencePago: string
+  diasParaVencer: number
+  cuotaMensual: number
+  indiviso: number
+  saldoFavor: number
+  mesesPagados: number
+  mesesTotales: number
+  anioEnCurso: number
+  /** Total pagado el año previo, para el delta del tile. */
+  pagadoAnioPrevio: number
+  /** 12 meses móviles; el último es el periodo en curso. */
+  serieMensual: PagoMensual[]
+  proximosCargos: CargoProximo[]
+  metodosPago: MetodoPago[]
+}

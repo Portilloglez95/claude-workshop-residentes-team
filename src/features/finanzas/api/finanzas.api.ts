@@ -2,6 +2,8 @@ import type {
   CuentaFinanzas,
   GastosFinanzas,
   MorosidadFinanzas,
+  PagoMensual,
+  ResumenPanel,
   TransparenciaFinanzas,
 } from '../types'
 
@@ -133,6 +135,101 @@ const MOCK_MOROSIDAD: MorosidadFinanzas = {
   ],
 }
 
+// Serie de 12 meses móviles del Depto. A-101. Dic 2025 y Jun 2026 traen cuota
+// extraordinaria; Ago 2026 es el periodo en curso y está pendiente.
+const SERIE_MENSUAL: PagoMensual[] = [
+  { etiqueta: 'Sep', periodo: 'Sep 2025', monto: 2380, estado: 'pagado', anio: 2025 },
+  { etiqueta: 'Oct', periodo: 'Oct 2025', monto: 2380, estado: 'pagado', anio: 2025 },
+  { etiqueta: 'Nov', periodo: 'Nov 2025', monto: 2380, estado: 'pagado', anio: 2025 },
+  { etiqueta: 'Dic', periodo: 'Dic 2025', monto: 3880, estado: 'pagado', anio: 2025 },
+  { etiqueta: 'Ene', periodo: 'Ene 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Feb', periodo: 'Feb 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Mar', periodo: 'Mar 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Abr', periodo: 'Abr 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'May', periodo: 'May 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Jun', periodo: 'Jun 2026', monto: 3950, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Jul', periodo: 'Jul 2026', monto: 2450, estado: 'pagado', anio: 2026 },
+  { etiqueta: 'Ago', periodo: 'Ago 2026', monto: 2450, estado: 'pendiente', anio: 2026 },
+]
+
+const MOCK_PANEL: ResumenPanel = {
+  unidad: 'A-101',
+  porPagar: 2450,
+  vencePago: '5 de septiembre',
+  diasParaVencer: 7,
+  cuotaMensual: 2450,
+  indiviso: 1.42,
+  saldoFavor: 0,
+  mesesPagados: 7,
+  mesesTotales: 8,
+  anioEnCurso: 2026,
+  pagadoAnioPrevio: 17200,
+  serieMensual: SERIE_MENSUAL,
+  proximosCargos: [
+    {
+      id: '1',
+      concepto: 'Cuota de mantenimiento · agosto',
+      detalle: 'Cuota ordinaria mensual',
+      vence: '5 sep',
+      diasRestantes: 7,
+      monto: 2450,
+      estado: 'por_vencer',
+    },
+    {
+      id: '2',
+      concepto: 'Cuota extraordinaria · fachada',
+      detalle: 'Parcialidad 2 de 3, aprobada en asamblea',
+      vence: '15 sep',
+      diasRestantes: 17,
+      monto: 1500,
+      estado: 'programado',
+    },
+    {
+      id: '3',
+      concepto: 'Uso de salón de eventos',
+      detalle: 'Reserva del 12 de julio',
+      vence: '20 ago',
+      diasRestantes: -9,
+      monto: 800,
+      estado: 'vencido',
+    },
+    {
+      id: '4',
+      concepto: 'Cuota de mantenimiento · septiembre',
+      detalle: 'Cuota ordinaria mensual',
+      vence: '5 oct',
+      diasRestantes: 37,
+      monto: 2450,
+      estado: 'programado',
+    },
+  ],
+  metodosPago: [
+    {
+      id: '1',
+      tipo: 'tarjeta',
+      etiqueta: 'Tarjeta ···4218',
+      detalle: 'Visa · vence 09/28',
+      activo: true,
+    },
+    {
+      id: '2',
+      tipo: 'spei',
+      // La CLABE completa se entrega al accionar el acceso, no en la etiqueta:
+      // a tres columnas se truncaría, y una CLABE a medias no sirve para pagar.
+      etiqueta: 'Transferencia SPEI',
+      detalle: 'Copiar CLABE',
+      activo: true,
+    },
+    {
+      id: '3',
+      tipo: 'domiciliacion',
+      etiqueta: 'Domiciliar pago',
+      detalle: 'Sin activar',
+      activo: false,
+    },
+  ],
+}
+
 async function delay() {
   await new Promise((resolve) => setTimeout(resolve, 300))
 }
@@ -155,4 +252,9 @@ export async function fetchTransparenciaFinanzas(): Promise<TransparenciaFinanza
 export async function fetchMorosidadFinanzas(): Promise<MorosidadFinanzas> {
   await delay()
   return MOCK_MOROSIDAD
+}
+
+export async function fetchResumenPanel(): Promise<ResumenPanel> {
+  await delay()
+  return MOCK_PANEL
 }
