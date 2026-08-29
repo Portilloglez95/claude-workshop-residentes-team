@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="nocturne.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<style>
+html,body{margin:0;background:#161826;color:#e9e9ed;font-family:"Inter",system-ui,sans-serif}
+a{color:#9184d9}a:hover{color:#b5abfc}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="display:flex;min-height:100vh;align-items:stretch">
+
+  <aside style="width:246px;flex:none;display:flex;flex-direction:column;gap:var(--space-6);padding:var(--space-6) var(--space-4);border-right:1px solid var(--color-divider);position:sticky;top:0;height:100vh;overflow:auto">
+    <div style="display:flex;align-items:center;gap:10px;padding:0 var(--space-2)">
+      <div style="width:26px;height:26px;flex:none;border:1px solid var(--color-accent);border-radius:var(--radius-sm);display:grid;place-items:center;color:var(--color-accent);font-size:14px"><i class="ph ph-buildings"></i></div>
+      <div style="display:flex;flex-direction:column;line-height:1.15">
+        <span style="font-size:15px;font-weight:500">{{ condoName }}</span>
+        <span style="font-size:11px;color:var(--color-neutral-500)">Portal del residente</span>
+      </div>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:var(--space-6)">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-600);padding:0 var(--space-2);margin-bottom:var(--space-2)">{{ g.label }}</div>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+            <a href="#" onClick="{{ it.go }}" style="{{ it.style }}">
+              <i class="ph {{ it.icon }}" style="font-size:16px;width:18px"></i>
+              <span style="flex:1">{{ it.label }}</span>
+              <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:10px;padding:1px 6px;border-radius:6px;background:var(--color-accent-800);color:var(--color-accent-100)">{{ it.badge }}</span>
+              </sc-if>
+            </a>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:var(--space-3) var(--space-2);border-top:1px solid var(--color-divider)">
+      <div style="width:30px;height:30px;flex:none;border-radius:50%;background:var(--color-accent-800);color:var(--color-accent-100);display:grid;place-items:center;font-size:12px;font-weight:500">MR</div>
+      <div style="display:flex;flex-direction:column;line-height:1.2;min-width:0">
+        <span style="font-size:13px">Mariana Rivas</span>
+        <span style="font-size:11px;color:var(--color-neutral-500)">Depto. {{ unit }} · Residente</span>
+      </div>
+    </div>
+  </aside>
+
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <header style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-8);border-bottom:1px solid var(--color-divider);position:sticky;top:0;background:#161826;z-index:5">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:340px;background:var(--color-surface);border:1px solid var(--color-divider);border-radius:var(--radius-md);padding:6px 10px">
+        <i class="ph ph-magnifying-glass" style="font-size:15px;color:var(--color-neutral-500)"></i>
+        <input class="input" placeholder="Buscar en el portal" style="background:transparent;border:0;min-height:22px;padding:0;font-size:13px">
+      </div>
+      <button class="btn btn-icon btn-secondary" aria-label="Notificaciones"><i class="ph ph-bell" style="font-size:16px"></i></button>
+      <button class="btn btn-secondary"><i class="ph ph-headset" style="font-size:15px"></i>Ayuda</button>
+    </header>
+
+    <div style="padding:var(--space-8) var(--space-8) 72px;max-width:1120px;width:100%;min-width:0;overflow-x:auto;animation:fadeUp .22s ease both">
+
+    <sc-if value="{{ isInicio }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-8)">
+          <div>
+            <h2 style="margin:0 0 4px">Buenas tardes, Mariana</h2>
+            <p class="text-muted" style="margin:0;font-size:14px">Esto es lo que necesita tu atención hoy.</p>
+          </div>
+          <span class="tag tag-outline">Depto. {{ unit }}</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <a href="#" onClick="{{ openPago }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);box-shadow:var(--shadow-sm);border-left:2px solid var(--color-accent)">
+            <i class="ph ph-credit-card" style="font-size:22px;color:var(--color-accent)"></i>
+            <span style="font-family:var(--font-heading);font-size:17px">Pagar cuota</span>
+            <span style="font-size:12px;color:var(--color-neutral-500)">Agosto 2026 · $2,450.00 MXN · vence el 5</span>
+          </a>
+          <a href="#" onClick="{{ openVisita }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);box-shadow:var(--shadow-sm)">
+            <i class="ph ph-user-plus" style="font-size:22px;color:var(--color-accent)"></i>
+            <span style="font-family:var(--font-heading);font-size:17px">Registrar visita</span>
+            <span style="font-size:12px;color:var(--color-neutral-500)">Genera un código QR para caseta</span>
+          </a>
+          <a href="#" onClick="{{ goTickets }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);box-shadow:var(--shadow-sm)">
+            <i class="ph ph-wrench" style="font-size:22px;color:var(--color-accent)"></i>
+            <span style="font-family:var(--font-heading);font-size:17px">Abrir ticket</span>
+            <span style="font-size:12px;color:var(--color-neutral-500)">Reporta una falla o solicitud</span>
+          </a>
+          <a href="#" onClick="{{ goPaqueteria }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);box-shadow:var(--shadow-sm)">
+            <i class="ph ph-package" style="font-size:22px;color:var(--color-accent)"></i>
+            <span style="font-family:var(--font-heading);font-size:17px">Recoger paquete</span>
+            <span style="font-size:12px;color:var(--color-neutral-500)">2 paquetes en recepción</span>
+          </a>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-6);align-items:start">
+          <section style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <h5 style="margin:0">Anuncios recientes</h5>
+              <a href="#" onClick="{{ goAnuncios }}" class="btn btn-ghost">Ver todos</a>
+            </div>
+            <article style="display:flex;flex-direction:column;gap:6px;padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+              <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-accent">Mantenimiento</span><span style="font-size:11px;color:var(--color-neutral-500)">Hace 2 días</span></div>
+              <span style="font-family:var(--font-heading);font-size:16px">Corte de agua en torre B, jueves 3</span>
+              <p style="margin:0;font-size:13px;color:var(--color-neutral-400)">De 9:00 a 14:00 h por cambio de bombas. Se recomienda almacenar agua la noche anterior.</p>
+            </article>
+            <article style="display:flex;flex-direction:column;gap:6px;padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+              <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-neutral">Asamblea</span><span style="font-size:11px;color:var(--color-neutral-500)">Hace 5 días</span></div>
+              <span style="font-family:var(--font-heading);font-size:16px">Convocatoria a asamblea ordinaria</span>
+              <p style="margin:0;font-size:13px;color:var(--color-neutral-400)">Sábado 12 de septiembre, 10:00 h en salón de usos múltiples. Orden del día en Documentos.</p>
+            </article>
+          </section>
+
+          <aside style="display:flex;flex-direction:column;gap:var(--space-6)">
+            <section style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+              <h6 style="margin:0;color:var(--color-neutral-500)">Mi estado de cuenta</h6>
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font-family:var(--font-heading);font-size:30px">$2,450</span>
+                <span style="font-size:12px;color:var(--color-neutral-500)">MXN por pagar</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-neutral-400)"><span>Cuota de agosto</span><span>$2,450.00</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-neutral-400)"><span>Adeudo anterior</span><span>$0.00</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-neutral-400)"><span>Estatus</span><span style="color:var(--color-accent-300)">Al corriente</span></div>
+              <button class="btn btn-primary btn-block" onClick="{{ openPago }}">Pagar en línea</button>
+            </section>
+
+            <section style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <h6 style="margin:0;color:var(--color-neutral-500)">Pendientes</h6>
+              <a href="#" onClick="{{ goEncuestas }}" style="display:flex;align-items:center;gap:10px;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--color-divider);text-decoration:none;color:inherit;font-size:13px">
+                <i class="ph ph-chart-bar" style="color:var(--color-accent);font-size:16px"></i><span style="flex:1">Encuesta: horario de alberca</span><i class="ph ph-arrow-right" style="font-size:14px;color:var(--color-neutral-500)"></i>
+              </a>
+              <a href="#" onClick="{{ goVisitas }}" style="display:flex;align-items:center;gap:10px;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--color-divider);text-decoration:none;color:inherit;font-size:13px">
+                <i class="ph ph-car" style="color:var(--color-accent);font-size:16px"></i><span style="flex:1">Visita de hoy sin confirmar</span><i class="ph ph-arrow-right" style="font-size:14px;color:var(--color-neutral-500)"></i>
+              </a>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAnuncios }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Anuncios</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Comunicados oficiales de la administración.</p>
+        <div class="seg" style="margin-bottom:var(--space-6)">
+          <label class="seg-opt"><input type="radio" name="anTab" checked>Todos</label>
+          <label class="seg-opt"><input type="radio" name="anTab">Mantenimiento</label>
+          <label class="seg-opt"><input type="radio" name="anTab">Asambleas</label>
+          <label class="seg-opt"><input type="radio" name="anTab">Seguridad</label>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+          <article style="display:flex;flex-direction:column;gap:8px;padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);border-left:2px solid var(--color-accent)">
+            <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-accent">Mantenimiento</span><span style="font-size:11px;color:var(--color-neutral-500)">27 ago 2026 · Administración</span></div>
+            <h4 style="margin:0">Corte de agua en torre B, jueves 3 de septiembre</h4>
+            <p style="margin:0;font-size:14px;color:var(--color-neutral-400)">El servicio se suspenderá de 9:00 a 14:00 h por sustitución de las bombas hidroneumáticas. Agradecemos almacenar agua la noche anterior. Cualquier duda, escríbenos por el chat de administración.</p>
+            <div style="display:flex;gap:var(--space-2);margin-top:var(--space-2)"><button class="btn btn-secondary"><i class="ph ph-paperclip" style="font-size:14px"></i>Aviso.pdf</button></div>
+          </article>
+          <article style="display:flex;flex-direction:column;gap:8px;padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-neutral">Asamblea</span><span style="font-size:11px;color:var(--color-neutral-500)">24 ago 2026 · Administración</span></div>
+            <h4 style="margin:0">Convocatoria a asamblea ordinaria</h4>
+            <p style="margin:0;font-size:14px;color:var(--color-neutral-400)">Se convoca a los condóminos el sábado 12 de septiembre a las 10:00 h en el salón de usos múltiples. El orden del día y el estado financiero están disponibles en Documentos.</p>
+          </article>
+          <article style="display:flex;flex-direction:column;gap:8px;padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-neutral">Seguridad</span><span style="font-size:11px;color:var(--color-neutral-500)">18 ago 2026 · Comité de vigilancia</span></div>
+            <h4 style="margin:0">Nuevo protocolo de acceso para proveedores</h4>
+            <p style="margin:0;font-size:14px;color:var(--color-neutral-400)">A partir del 1 de septiembre todo proveedor deberá registrarse desde el portal con 12 horas de anticipación e identificarse en caseta.</p>
+          </article>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDocumentos }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Documentos</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Reglamentos, actas y estados financieros del condominio.</p>
+        <table class="table">
+          <thead><tr><th style="width:44%">Documento</th><th>Categoría</th><th>Actualizado</th><th style="text-align:right">Acción</th></tr></thead>
+          <tbody>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><i class="ph ph-file-text" style="color:var(--color-accent)"></i>Reglamento interno 2026</div></td><td class="text-muted">Normativa</td><td class="text-muted">12 ene 2026</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Descargar</a></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><i class="ph ph-file-text" style="color:var(--color-accent)"></i>Acta de asamblea · junio 2026</div></td><td class="text-muted">Actas</td><td class="text-muted">28 jun 2026</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Descargar</a></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><i class="ph ph-file-text" style="color:var(--color-accent)"></i>Estado financiero · julio 2026</div></td><td class="text-muted">Finanzas</td><td class="text-muted">05 ago 2026</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Descargar</a></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><i class="ph ph-file-text" style="color:var(--color-accent)"></i>Presupuesto anual 2026</div></td><td class="text-muted">Finanzas</td><td class="text-muted">15 dic 2025</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Descargar</a></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><i class="ph ph-file-text" style="color:var(--color-accent)"></i>Póliza de seguro del inmueble</div></td><td class="text-muted">Legal</td><td class="text-muted">03 mar 2026</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Descargar</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTickets }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-8)">
+          <div>
+            <h2 style="margin:0 0 4px">Tickets</h2>
+            <p class="text-muted" style="margin:0;font-size:14px">Reportes y solicitudes de tu unidad.</p>
+          </div>
+          <button class="btn btn-primary"><i class="ph ph-plus" style="font-size:14px"></i>Nuevo ticket</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Abiertos</div><div style="font-family:var(--font-heading);font-size:26px">2</div></div>
+          <div style="padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">En proceso</div><div style="font-family:var(--font-heading);font-size:26px">1</div></div>
+          <div style="padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Resueltos este año</div><div style="font-family:var(--font-heading);font-size:26px">7</div></div>
+        </div>
+        <table class="table">
+          <thead><tr><th>Folio</th><th style="width:38%">Asunto</th><th>Categoría</th><th>Estatus</th><th>Actualizado</th></tr></thead>
+          <tbody>
+            <tr><td class="text-muted">#1042</td><td>Fuga en llave del jardín común</td><td class="text-muted">Plomería</td><td><span class="tag tag-accent">En proceso</span></td><td class="text-muted">Hoy, 11:20</td></tr>
+            <tr><td class="text-muted">#1038</td><td>Luminaria fundida en cajón 24</td><td class="text-muted">Electricidad</td><td><span class="tag tag-outline">Abierto</span></td><td class="text-muted">26 ago</td></tr>
+            <tr><td class="text-muted">#1031</td><td>Ruido después de las 23:00 h</td><td class="text-muted">Convivencia</td><td><span class="tag tag-outline">Abierto</span></td><td class="text-muted">21 ago</td></tr>
+            <tr><td class="text-muted">#1019</td><td>Portón de acceso no cierra</td><td class="text-muted">Herrería</td><td><span class="tag tag-neutral">Resuelto</span></td><td class="text-muted">09 ago</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Chat con administración</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Conversación por WhatsApp, integrada al portal. Horario de atención: lun a vie, 9:00 a 18:00 h.</p>
+        <div style="max-width:620px;display:flex;flex-direction:column;border-radius:var(--radius-lg);background:var(--color-surface);box-shadow:var(--shadow-sm);overflow:hidden">
+          <div style="display:flex;align-items:center;gap:10px;padding:var(--space-4) var(--space-6);border-bottom:1px solid var(--color-divider)">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--color-accent-800);color:var(--color-accent-100);display:grid;place-items:center;font-size:13px">AD</div>
+            <div style="display:flex;flex-direction:column;line-height:1.2;flex:1"><span style="font-size:14px">Administración</span><span style="font-size:11px;color:var(--color-accent-300)">En línea · responde en ~15 min</span></div>
+            <i class="ph ph-whatsapp-logo" style="font-size:18px;color:var(--color-neutral-500)"></i>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);min-height:320px">
+            <div style="align-self:center;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-600)">Hoy</div>
+            <div style="align-self:flex-start;max-width:76%;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--color-neutral-900);font-size:14px">Buen día, Mariana. Su ticket #1042 fue asignado al plomero, pasará mañana entre 10:00 y 12:00 h.</div>
+            <div style="align-self:flex-end;max-width:76%;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--color-accent-800);font-size:14px">Perfecto, ahí estaré. ¿Necesito dejar acceso en caseta?</div>
+            <div style="align-self:flex-start;max-width:76%;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--color-neutral-900);font-size:14px">No es necesario, el proveedor ya está registrado. Le confirmamos en cuanto llegue.</div>
+            <div style="align-self:flex-end;max-width:76%;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--color-accent-800);font-size:14px">Gracias.</div>
+          </div>
+          <div style="display:flex;gap:var(--space-2);padding:var(--space-4);border-top:1px solid var(--color-divider)">
+            <input class="input" placeholder="Escribe un mensaje">
+            <button class="btn btn-primary"><i class="ph ph-paper-plane-right" style="font-size:15px"></i>Enviar</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPagos }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-8)">
+          <div>
+            <h2 style="margin:0 0 4px">Pagos y cuotas</h2>
+            <p class="text-muted" style="margin:0;font-size:14px">Cuota de mantenimiento del Depto. {{ unit }}.</p>
+          </div>
+          <button class="btn btn-primary" onClick="{{ openPago }}"><i class="ph ph-credit-card" style="font-size:15px"></i>Pagar cuota</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);border-left:2px solid var(--color-accent)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Por pagar</div><div style="font-family:var(--font-heading);font-size:28px">$2,450.00</div><div style="font-size:12px;color:var(--color-neutral-500)">Vence el 5 de septiembre</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Cuota mensual</div><div style="font-family:var(--font-heading);font-size:28px">$2,450.00</div><div style="font-size:12px;color:var(--color-neutral-500)">Indiviso 1.42%</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Pagado en 2026</div><div style="font-family:var(--font-heading);font-size:28px">$17,150.00</div><div style="font-size:12px;color:var(--color-neutral-500)">7 de 8 meses</div></div>
+        </div>
+        <h5 style="margin:0 0 var(--space-3)">Historial</h5>
+        <table class="table">
+          <thead><tr><th>Periodo</th><th>Concepto</th><th>Método</th><th>Monto</th><th>Estatus</th><th style="text-align:right">Recibo</th></tr></thead>
+          <tbody>
+            <tr><td>Ago 2026</td><td>Cuota de mantenimiento</td><td class="text-muted">—</td><td>$2,450.00</td><td><span class="tag tag-outline">Pendiente</span></td><td style="text-align:right" class="text-muted">—</td></tr>
+            <tr><td>Jul 2026</td><td>Cuota de mantenimiento</td><td class="text-muted">Tarjeta ···4218</td><td>$2,450.00</td><td><span class="tag tag-neutral">Pagado</span></td><td style="text-align:right"><a href="#" class="btn btn-ghost">PDF</a></td></tr>
+            <tr><td>Jun 2026</td><td>Cuota + cuota extraordinaria</td><td class="text-muted">SPEI</td><td>$3,950.00</td><td><span class="tag tag-neutral">Pagado</span></td><td style="text-align:right"><a href="#" class="btn btn-ghost">PDF</a></td></tr>
+            <tr><td>May 2026</td><td>Cuota de mantenimiento</td><td class="text-muted">Tarjeta ···4218</td><td>$2,450.00</td><td><span class="tag tag-neutral">Pagado</span></td><td style="text-align:right"><a href="#" class="btn btn-ghost">PDF</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGastos }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Gastos del condominio</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Egresos del mes en curso, con comprobante disponible.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Ingresos de agosto</div><div style="font-family:var(--font-heading);font-size:26px">$286,400</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Egresos de agosto</div><div style="font-family:var(--font-heading);font-size:26px">$241,780</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);border-left:2px solid var(--color-accent)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Saldo en caja</div><div style="font-family:var(--font-heading);font-size:26px">$412,900</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-bottom:var(--space-8)">
+          <div style="display:flex;align-items:center;gap:var(--space-4)"><span style="width:130px;font-size:13px;color:var(--color-neutral-400)">Vigilancia</span><div style="flex:1;height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:44%;height:8px;border-radius:4px;background:var(--color-accent)"></div></div><span style="width:96px;text-align:right;font-size:13px">$106,000</span></div>
+          <div style="display:flex;align-items:center;gap:var(--space-4)"><span style="width:130px;font-size:13px;color:var(--color-neutral-400)">Limpieza</span><div style="flex:1;height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:22%;height:8px;border-radius:4px;background:var(--color-accent-500)"></div></div><span style="width:96px;text-align:right;font-size:13px">$53,200</span></div>
+          <div style="display:flex;align-items:center;gap:var(--space-4)"><span style="width:130px;font-size:13px;color:var(--color-neutral-400)">Áreas verdes</span><div style="flex:1;height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:14%;height:8px;border-radius:4px;background:var(--color-accent-600)"></div></div><span style="width:96px;text-align:right;font-size:13px">$33,800</span></div>
+          <div style="display:flex;align-items:center;gap:var(--space-4)"><span style="width:130px;font-size:13px;color:var(--color-neutral-400)">Energía eléctrica</span><div style="flex:1;height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:12%;height:8px;border-radius:4px;background:var(--color-accent-700)"></div></div><span style="width:96px;text-align:right;font-size:13px">$28,900</span></div>
+          <div style="display:flex;align-items:center;gap:var(--space-4)"><span style="width:130px;font-size:13px;color:var(--color-neutral-400)">Mantenimientos</span><div style="flex:1;height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:8%;height:8px;border-radius:4px;background:var(--color-neutral-700)"></div></div><span style="width:96px;text-align:right;font-size:13px">$19,880</span></div>
+        </div>
+        <h5 style="margin:0 0 var(--space-3)">Movimientos</h5>
+        <table class="table">
+          <thead><tr><th>Fecha</th><th style="width:36%">Concepto</th><th>Proveedor</th><th>Monto</th><th style="text-align:right">Comprobante</th></tr></thead>
+          <tbody>
+            <tr><td class="text-muted">26 ago</td><td>Servicio de vigilancia · agosto</td><td class="text-muted">Segurex SA de CV</td><td>$106,000.00</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Factura</a></td></tr>
+            <tr><td class="text-muted">20 ago</td><td>Cambio de bombas hidroneumáticas</td><td class="text-muted">Hidroservicios MX</td><td>$19,880.00</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Factura</a></td></tr>
+            <tr><td class="text-muted">15 ago</td><td>Limpieza de áreas comunes</td><td class="text-muted">Grupo Nítido</td><td>$53,200.00</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Factura</a></td></tr>
+            <tr><td class="text-muted">10 ago</td><td>Consumo CFE · bimestre</td><td class="text-muted">CFE</td><td>$28,900.00</td><td style="text-align:right"><a href="#" class="btn btn-ghost">Recibo</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTransparencia }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Transparencia</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Presupuesto aprobado en asamblea y su ejecución al 31 de agosto de 2026.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Presupuesto 2026</div><div style="font-family:var(--font-heading);font-size:26px">$3,436,800</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Ejecutado</div><div style="font-family:var(--font-heading);font-size:26px">$1,894,240</div><div style="font-size:12px;color:var(--color-neutral-500)">55% del anual</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Fondo de reserva</div><div style="font-family:var(--font-heading);font-size:26px">$684,000</div></div>
+        </div>
+        <table class="table" style="margin-bottom:var(--space-8)">
+          <thead><tr><th style="width:34%">Rubro</th><th>Presupuesto anual</th><th>Ejecutado</th><th>Avance</th></tr></thead>
+          <tbody>
+            <tr><td>Vigilancia</td><td>$1,272,000.00</td><td>$742,000.00</td><td class="text-muted">58%</td></tr>
+            <tr><td>Limpieza</td><td>$638,400.00</td><td>$372,400.00</td><td class="text-muted">58%</td></tr>
+            <tr><td>Áreas verdes</td><td>$405,600.00</td><td>$236,600.00</td><td class="text-muted">58%</td></tr>
+            <tr><td>Energía eléctrica y agua</td><td>$520,200.00</td><td>$289,540.00</td><td class="text-muted">56%</td></tr>
+            <tr><td>Mantenimientos y reparaciones</td><td>$416,600.00</td><td>$253,700.00</td><td class="text-muted">61%</td></tr>
+            <tr><td>Administración</td><td>$184,000.00</td><td>$0.00</td><td class="text-muted">0%</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:var(--space-2)">
+          <button class="btn btn-secondary"><i class="ph ph-download-simple" style="font-size:14px"></i>Estado financiero de julio</button>
+          <button class="btn btn-secondary"><i class="ph ph-download-simple" style="font-size:14px"></i>Presupuesto 2026 aprobado</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMorosos }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Morosidad</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-6);font-size:14px">Publicada conforme al reglamento interno aprobado en asamblea. Se muestra unidad y antigüedad del adeudo, sin datos personales.</p>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);border:1px solid var(--color-accent-700);margin-bottom:var(--space-8);max-width:720px">
+          <i class="ph ph-check-circle" style="color:var(--color-accent);font-size:18px"></i>
+          <div style="font-size:13px;color:var(--color-neutral-300)">Tu unidad, el Depto. {{ unit }}, está al corriente. La cuota de agosto vence el 5 de septiembre.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Unidades con adeudo</div><div style="font-family:var(--font-heading);font-size:26px">14 <span style="font-size:14px;color:var(--color-neutral-500)">de 118</span></div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Monto en rezago</div><div style="font-family:var(--font-heading);font-size:26px">$318,500</div></div>
+          <div style="padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Cobranza del mes</div><div style="font-family:var(--font-heading);font-size:26px">88.1%</div></div>
+        </div>
+        <table class="table">
+          <thead><tr><th>Unidad</th><th>Meses de adeudo</th><th>Monto</th><th>Estatus</th></tr></thead>
+          <tbody>
+            <tr><td>B-104</td><td class="text-muted">7</td><td>$17,150.00</td><td><span class="tag tag-accent">En cobranza legal</span></td></tr>
+            <tr><td>A-302</td><td class="text-muted">5</td><td>$12,250.00</td><td><span class="tag tag-outline">Convenio de pago</span></td></tr>
+            <tr><td>C-201</td><td class="text-muted">4</td><td>$9,800.00</td><td><span class="tag tag-outline">Convenio de pago</span></td></tr>
+            <tr><td>A-108</td><td class="text-muted">3</td><td>$7,350.00</td><td><span class="tag tag-neutral">Notificado</span></td></tr>
+            <tr><td>D-405</td><td class="text-muted">2</td><td>$4,900.00</td><td><span class="tag tag-neutral">Notificado</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEncuestas }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Encuestas y votaciones</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Un voto por unidad. Los resultados se publican al cierre.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-6);align-items:start;max-width:960px">
+          <section style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);border-left:2px solid var(--color-accent)">
+            <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-accent">Abierta</span><span style="font-size:11px;color:var(--color-neutral-500)">Cierra el 5 de septiembre</span></div>
+            <h4 style="margin:0">Horario de alberca en temporada de lluvias</h4>
+            <p style="margin:0;font-size:13px;color:var(--color-neutral-400)">Elige el horario que prefieres para los meses de septiembre y octubre.</p>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-2)">
+              <label class="radio"><input type="radio" name="enc1"><span class="dot"></span>7:00 a 21:00 h, todos los días</label>
+              <label class="radio"><input type="radio" name="enc1" checked><span class="dot"></span>8:00 a 20:00 h, todos los días</label>
+              <label class="radio"><input type="radio" name="enc1"><span class="dot"></span>8:00 a 22:00 h, solo fines de semana</label>
+            </div>
+            <button class="btn btn-primary btn-block">Emitir mi voto</button>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-neutral">Cerrada</span><span style="font-size:11px;color:var(--color-neutral-500)">14 ago 2026 · 96 de 118 votos</span></div>
+            <h4 style="margin:0">Instalación de estaciones de carga eléctrica</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>A favor</span><span>68%</span></div><div style="height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:68%;height:8px;border-radius:4px;background:var(--color-accent)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>En contra</span><span>21%</span></div><div style="height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:21%;height:8px;border-radius:4px;background:var(--color-accent-600)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Abstención</span><span>11%</span></div><div style="height:8px;border-radius:4px;background:var(--color-neutral-900)"><div style="width:11%;height:8px;border-radius:4px;background:var(--color-neutral-700)"></div></div></div>
+            </div>
+            <p style="margin:0;font-size:12px;color:var(--color-neutral-500)">Aprobada. La ejecución se somete a presupuesto en la asamblea de septiembre.</p>
+          </section>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPaqueteria }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Paquetería</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Paquetes recibidos en caseta a nombre del Depto. {{ unit }}.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);max-width:760px">
+          <div style="display:flex;align-items:center;gap:var(--space-6);padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);border-left:2px solid var(--color-accent)">
+            <i class="ph ph-package" style="font-size:24px;color:var(--color-accent)"></i>
+            <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:15px">Sobre mediano · Mercado Libre</span><span style="font-size:12px;color:var(--color-neutral-500)">Recibido hoy, 10:42 h · guardado en caseta norte</span></div>
+            <span class="tag tag-accent">Por recoger</span>
+            <button class="btn btn-primary">Autorizar entrega</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-6);padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <i class="ph ph-package" style="font-size:24px;color:var(--color-neutral-500)"></i>
+            <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:15px">Caja grande · Amazon</span><span style="font-size:12px;color:var(--color-neutral-500)">Recibido ayer, 17:15 h · guardado en caseta norte</span></div>
+            <span class="tag tag-accent">Por recoger</span>
+            <button class="btn btn-secondary">Autorizar entrega</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-6);padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);opacity:0.72">
+            <i class="ph ph-check-circle" style="font-size:24px;color:var(--color-neutral-500)"></i>
+            <div style="flex:1;display:flex;flex-direction:column;line-height:1.35"><span style="font-size:15px">Sobre chico · DHL</span><span style="font-size:12px;color:var(--color-neutral-500)">Entregado 24 ago, 19:04 h · recibió Mariana Rivas</span></div>
+            <span class="tag tag-neutral">Entregado</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isVisitas }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-8)">
+          <div>
+            <h2 style="margin:0 0 4px">Visitas</h2>
+            <p class="text-muted" style="margin:0;font-size:14px">Registra a tus invitados y proveedores para agilizar el acceso en caseta.</p>
+          </div>
+          <button class="btn btn-primary" onClick="{{ openVisita }}"><i class="ph ph-user-plus" style="font-size:15px"></i>Registrar visita</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:var(--space-6);align-items:start">
+          <div style="min-width:0;overflow-x:auto">
+            <h5 style="margin:0 0 var(--space-3)">Próximas</h5>
+            <table class="table" style="margin-bottom:var(--space-8);min-width:520px">
+              <thead><tr><th style="width:32%">Visitante</th><th>Tipo</th><th>Fecha</th><th>Vehículo</th><th>Estatus</th></tr></thead>
+              <tbody>
+                <tr><td>Luis Ortega</td><td class="text-muted">Invitado</td><td class="text-muted">Hoy, 19:00 h</td><td class="text-muted">JHK-42-18</td><td><span class="tag tag-accent">Código activo</span></td></tr>
+                <tr><td>Muebles del Valle</td><td class="text-muted">Proveedor</td><td class="text-muted">Mañana, 11:00 h</td><td class="text-muted">Camioneta blanca</td><td><span class="tag tag-outline">Programada</span></td></tr>
+              </tbody>
+            </table>
+            <h5 style="margin:0 0 var(--space-3)">Historial</h5>
+            <table class="table" style="min-width:520px">
+              <thead><tr><th style="width:32%">Visitante</th><th>Tipo</th><th>Entrada</th><th>Salida</th><th>Registró</th></tr></thead>
+              <tbody>
+                <tr><td>Ana Beltrán</td><td class="text-muted">Invitada</td><td class="text-muted">25 ago, 18:22</td><td class="text-muted">25 ago, 23:10</td><td class="text-muted">Caseta norte</td></tr>
+                <tr><td>Tec Aire Frío</td><td class="text-muted">Proveedor</td><td class="text-muted">21 ago, 09:58</td><td class="text-muted">21 ago, 12:30</td><td class="text-muted">Caseta norte</td></tr>
+                <tr><td>Rappi</td><td class="text-muted">Entrega</td><td class="text-muted">19 ago, 20:41</td><td class="text-muted">19 ago, 20:49</td><td class="text-muted">Caseta sur</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface);align-items:center;text-align:center">
+            <h6 style="margin:0;color:var(--color-neutral-500);align-self:flex-start">Código de acceso activo</h6>
+            <div style="width:132px;height:132px;border-radius:var(--radius-md);border:1px solid var(--color-divider);background:repeating-linear-gradient(45deg,var(--color-neutral-900) 0 6px,var(--color-neutral-800) 6px 12px);display:grid;place-items:center;color:var(--color-neutral-500);font:11px ui-monospace,Menlo,monospace">QR</div>
+            <div style="font-family:var(--font-heading);font-size:22px;letter-spacing:0.14em">7K2-940</div>
+            <div style="font-size:12px;color:var(--color-neutral-500)">Luis Ortega · válido hoy hasta las 23:59 h</div>
+            <button class="btn btn-secondary btn-block"><i class="ph ph-share-network" style="font-size:14px"></i>Compartir por WhatsApp</button>
+          </aside>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSistema }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="margin:0 0 4px">Sistema de diseño</h2>
+        <p class="text-muted" style="margin:0 0 var(--space-8);font-size:14px">Nocturne aplicado al portal: color, tipografía, componentes y reglas de uso.</p>
+
+        <h5 style="margin:0 0 var(--space-3)">Color</h5>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-8)">
+          <div style="width:140px"><div style="height:56px;border-radius:var(--radius-md);background:var(--color-bg);box-shadow:var(--shadow-sm)"></div><div style="font-size:11px;margin-top:5px">Fondo<br><span class="text-muted">#161826</span></div></div>
+          <div style="width:140px"><div style="height:56px;border-radius:var(--radius-md);background:var(--color-surface)"></div><div style="font-size:11px;margin-top:5px">Superficie<br><span class="text-muted">#232532</span></div></div>
+          <div style="width:140px"><div style="height:56px;border-radius:var(--radius-md);background:var(--color-accent)"></div><div style="font-size:11px;margin-top:5px">Acento<br><span class="text-muted">#9184d9</span></div></div>
+          <div style="width:140px"><div style="height:56px;border-radius:var(--radius-md);background:var(--color-text)"></div><div style="font-size:11px;margin-top:5px">Texto<br><span class="text-muted">#e9e9ed</span></div></div>
+          <div style="width:140px"><div style="height:56px;border-radius:var(--radius-md);background:var(--color-neutral-700)"></div><div style="font-size:11px;margin-top:5px">Neutral 700<br><span class="text-muted">Bordes, barras</span></div></div>
+        </div>
+
+        <h5 style="margin:0 0 var(--space-3)">Tipografía · Inter</h5>
+        <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-8);max-width:640px">
+          <div style="display:flex;align-items:baseline;gap:var(--space-6)"><span style="width:96px;font-size:11px;color:var(--color-neutral-500)">H2 · 32/500</span><h2 style="margin:0">Pagos y cuotas</h2></div>
+          <div style="display:flex;align-items:baseline;gap:var(--space-6)"><span style="width:96px;font-size:11px;color:var(--color-neutral-500)">H4 · 20/500</span><h4 style="margin:0">Corte de agua en torre B</h4></div>
+          <div style="display:flex;align-items:baseline;gap:var(--space-6)"><span style="width:96px;font-size:11px;color:var(--color-neutral-500)">Cuerpo · 15/400</span><span>El servicio se suspenderá de 9:00 a 14:00 h.</span></div>
+          <div style="display:flex;align-items:baseline;gap:var(--space-6)"><span style="width:96px;font-size:11px;color:var(--color-neutral-500)">Meta · 12/400</span><span class="text-muted" style="font-size:12px">27 ago 2026 · Administración</span></div>
+        </div>
+
+        <h5 style="margin:0 0 var(--space-3)">Componentes</h5>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <h6 style="margin:0;color:var(--color-neutral-500)">Botones</h6>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2)"><button class="btn btn-primary">Pagar cuota</button><button class="btn btn-secondary">Cancelar</button><button class="btn btn-ghost">Ver todos</button><button class="btn btn-icon btn-secondary"><i class="ph ph-bell"></i></button></div>
+            <span style="font-size:12px;color:var(--color-neutral-500)">La acción primaria es contorno de acento, nunca relleno.</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <h6 style="margin:0;color:var(--color-neutral-500)">Etiquetas de estatus</h6>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2)"><span class="tag tag-accent">En proceso</span><span class="tag tag-outline">Pendiente</span><span class="tag tag-neutral">Pagado</span><span class="tag tag-neutral">Cerrada</span></div>
+            <span style="font-size:12px;color:var(--color-neutral-500)">Acento = requiere atención. Neutral = resuelto o histórico.</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <h6 style="margin:0;color:var(--color-neutral-500)">Campos</h6>
+            <div class="field"><label>Nombre del visitante</label><input class="input" placeholder="Luis Ortega"></div>
+            <div class="seg"><label class="seg-opt"><input type="radio" name="dsSeg" checked>Invitado</label><label class="seg-opt"><input type="radio" name="dsSeg">Proveedor</label></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-6);border-radius:var(--radius-md);background:var(--color-surface)">
+            <h6 style="margin:0;color:var(--color-neutral-500)">Tarjeta de dato</h6>
+            <div style="padding:var(--space-4);border-radius:var(--radius-md);background:var(--color-bg);border-left:2px solid var(--color-accent)"><div style="font-size:11px;color:var(--color-neutral-500);text-transform:uppercase;letter-spacing:0.08em">Por pagar</div><div style="font-family:var(--font-heading);font-size:26px">$2,450.00</div></div>
+            <span style="font-size:12px;color:var(--color-neutral-500)">La marca de acento a la izquierda señala el dato accionable de la pantalla.</span>
+          </div>
+        </div>
+
+        <h5 style="margin:0 0 var(--space-3)">Reglas</h5>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);max-width:820px">
+          <div style="font-size:13px;color:var(--color-neutral-400)"><div style="color:var(--color-accent-300);font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Sí</div>Un solo acento, usado como línea, ícono o marca. Espaciado denso (escala 0.7×). Radio de 8px. Íconos Phosphor regular a 16px en interfaz.</div>
+          <div style="font-size:13px;color:var(--color-neutral-400)"><div style="color:var(--color-accent-300);font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">No</div>Rellenos saturados en áreas grandes, segundo color de acento, negros o blancos puros, sombras apiladas, títulos por encima del peso 500.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    </div>
+  </main>
+</div>
+
+<sc-if value="{{ modalPago }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop">
+    <div class="dialog">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4)">
+        <div class="dialog-title">Pagar cuota de agosto</div>
+        <button class="btn btn-icon btn-ghost" onClick="{{ closeModal }}" aria-label="Cerrar"><i class="ph ph-x"></i></button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-4);border-radius:var(--radius-md);background:var(--color-bg)">
+        <span style="font-size:13px;color:var(--color-neutral-400)">Depto. {{ unit }} · cuota de mantenimiento</span>
+        <span style="font-family:var(--font-heading);font-size:22px">$2,450.00</span>
+      </div>
+      <div class="seg" style="align-self:stretch">
+        <label class="seg-opt" style="flex:1;justify-content:center"><input type="radio" name="metodo" checked><i class="ph ph-credit-card"></i>Tarjeta</label>
+        <label class="seg-opt" style="flex:1;justify-content:center"><input type="radio" name="metodo"><i class="ph ph-bank"></i>SPEI</label>
+      </div>
+      <div class="field"><label>Número de tarjeta</label><input class="input" placeholder="4218 •••• •••• ••••"></div>
+      <div style="display:flex;gap:var(--space-3)">
+        <div class="field" style="flex:1"><label>Vencimiento</label><input class="input" placeholder="MM/AA"></div>
+        <div class="field" style="width:96px"><label>CVV</label><input class="input" placeholder="•••"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-500)"><span>Comisión por procesamiento</span><span>$0.00</span></div>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" onClick="{{ closeModal }}">Cancelar</button>
+        <button class="btn btn-primary" onClick="{{ closeModal }}">Pagar $2,450.00</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ modalVisita }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop">
+    <div class="dialog">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4)">
+        <div class="dialog-title">Registrar visita</div>
+        <button class="btn btn-icon btn-ghost" onClick="{{ closeModal }}" aria-label="Cerrar"><i class="ph ph-x"></i></button>
+      </div>
+      <div class="seg" style="align-self:stretch">
+        <label class="seg-opt" style="flex:1;justify-content:center"><input type="radio" name="tipoV" checked>Invitado</label>
+        <label class="seg-opt" style="flex:1;justify-content:center"><input type="radio" name="tipoV">Proveedor</label>
+        <label class="seg-opt" style="flex:1;justify-content:center"><input type="radio" name="tipoV">Entrega</label>
+      </div>
+      <div class="field"><label>Nombre completo</label><input class="input" placeholder="Luis Ortega"></div>
+      <div style="display:flex;gap:var(--space-3)">
+        <div class="field" style="flex:1"><label>Fecha</label><input class="input" placeholder="29/08/2026"></div>
+        <div class="field" style="flex:1"><label>Hora estimada</label><input class="input" placeholder="19:00"></div>
+      </div>
+      <div class="field"><label>Placas del vehículo <span class="text-muted">(opcional)</span></label><input class="input" placeholder="JHK-42-18"></div>
+      <div style="font-size:12px;color:var(--color-neutral-500)">Se generará un código de acceso que podrás compartir por WhatsApp. Caseta lo valida al ingreso.</div>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" onClick="{{ closeModal }}">Cancelar</button>
+        <button class="btn btn-primary" onClick="{{ closeModal }}">Generar código</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;condoName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Residencial Altavista&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;unit&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;B-207&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;}}">
+class Component extends DCLogic {
+  state = { screen: 'inicio', modal: null };
+
+  go(id) { return (e) => { if (e) e.preventDefault(); this.setState({ screen: id, modal: null }); window.scrollTo(0, 0); }; }
+
+  renderVals() {
+    const cur = this.state.screen;
+    const item = (id, label, icon, badge) => ({
+      label, icon, badge,
+      go: this.go(id),
+      style: 'display:flex;align-items:center;gap:9px;padding:6px var(--space-2);border-radius:var(--radius-sm);font-size:13.5px;text-decoration:none;'
+        + (cur === id
+          ? 'color:var(--color-accent);background:color-mix(in srgb, var(--color-accent) 12%, transparent);'
+          : 'color:var(--color-neutral-300);')
+    });
+
+    const navGroups = [
+      { label: 'General', items: [item('inicio', 'Inicio', 'ph-house')] },
+      { label: 'Comunicaciones', items: [
+        item('anuncios', 'Anuncios', 'ph-megaphone', '3'),
+        item('documentos', 'Documentos', 'ph-folder'),
+        item('tickets', 'Tickets', 'ph-wrench', '2'),
+        item('chat', 'WhatsApp', 'ph-whatsapp-logo')
+      ]},
+      { label: 'Finanzas', items: [
+        item('pagos', 'Pagos y cuotas', 'ph-credit-card'),
+        item('gastos', 'Gastos', 'ph-receipt')
+      ]},
+      { label: 'Legal', items: [
+        item('transparencia', 'Transparencia', 'ph-scales'),
+        item('morosos', 'Morosidad', 'ph-warning-circle'),
+        item('encuestas', 'Encuestas', 'ph-chart-bar', '1')
+      ]},
+      { label: 'Control de acceso', items: [
+        item('paqueteria', 'Paquetería', 'ph-package', '2'),
+        item('visitas', 'Visitas', 'ph-user-plus')
+      ]},
+      { label: 'Referencia', items: [item('sistema', 'Sistema de diseño', 'ph-swatches')] }
+    ];
+
+    const open = (m) => (e) => { if (e) e.preventDefault(); this.setState({ modal: m }); };
+
+    return {
+      navGroups,
+      condoName: this.props.condoName ?? 'Residencial Altavista',
+      unit: this.props.unit ?? 'B-207',
+      isInicio: cur === 'inicio',
+      isAnuncios: cur === 'anuncios',
+      isDocumentos: cur === 'documentos',
+      isTickets: cur === 'tickets',
+      isChat: cur === 'chat',
+      isPagos: cur === 'pagos',
+      isGastos: cur === 'gastos',
+      isTransparencia: cur === 'transparencia',
+      isMorosos: cur === 'morosos',
+      isEncuestas: cur === 'encuestas',
+      isPaqueteria: cur === 'paqueteria',
+      isVisitas: cur === 'visitas',
+      isSistema: cur === 'sistema',
+      goAnuncios: this.go('anuncios'),
+      goTickets: this.go('tickets'),
+      goPaqueteria: this.go('paqueteria'),
+      goEncuestas: this.go('encuestas'),
+      goVisitas: this.go('visitas'),
+      openPago: open('pago'),
+      openVisita: open('visita'),
+      closeModal: (e) => { if (e) e.preventDefault(); this.setState({ modal: null }); },
+      modalPago: this.state.modal === 'pago',
+      modalVisita: this.state.modal === 'visita'
+    };
+  }
+}
+
+</script>
+</body>
+</html>
