@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { ImageOff, Upload } from 'lucide-react'
+import { ImageBroken, Upload } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 
@@ -46,7 +46,7 @@ export function FotoInput({
           {value ? (
             <img src={value} alt="Vista previa" className="size-full object-cover" />
           ) : (
-            <ImageOff className="text-muted-foreground size-5" />
+            <ImageBroken className="text-muted-foreground size-5" />
           )}
         </div>
 

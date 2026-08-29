@@ -17,7 +17,7 @@ export function ResidentesPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Residentes</h1>
+        <h1 className="text-2xl font-medium">Residentes</h1>
         <p className="text-muted-foreground text-sm">
           Personas que viven contigo en la unidad {RESIDENTE_ACTUAL.unidad}.
         </p>

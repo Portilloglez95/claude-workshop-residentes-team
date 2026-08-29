@@ -12,7 +12,7 @@ export function AvisosPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Avisos</h1>
+        <h1 className="text-2xl font-medium">Avisos</h1>
         <p className="text-muted-foreground text-sm">
           Comunicados de administración y la junta directiva.
           {avisos && sinLeer > 0 && ` Tienes ${sinLeer} sin leer.`}

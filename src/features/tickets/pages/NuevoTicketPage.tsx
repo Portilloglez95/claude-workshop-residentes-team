@@ -59,7 +59,7 @@ export function NuevoTicketPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Nuevo ticket</h1>
+        <h1 className="text-2xl font-medium">Nuevo ticket</h1>
         <p className="text-muted-foreground text-sm">
           Reporta una falla o queja. Administración te responderá aquí mismo.
         </p>

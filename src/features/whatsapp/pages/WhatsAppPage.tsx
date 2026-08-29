@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { SendHorizontal } from 'lucide-react'
+import { PaperPlaneRight } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { MensajeBubble } from '../components/MensajeBubble'
@@ -27,7 +27,7 @@ export function WhatsAppPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">WhatsApp</h1>
+        <h1 className="text-2xl font-medium">WhatsApp</h1>
         <p className="text-muted-foreground text-sm">
           Chat directo con administración, integrado al portal. Por dentro la conversación
           viaja por WhatsApp — no necesitas salir de la app.
@@ -69,7 +69,7 @@ export function WhatsAppPage() {
             aria-label="Mensaje"
           />
           <Button type="submit" disabled={!texto.trim() || enviarMensaje.isPending}>
-            <SendHorizontal className="size-4" />
+            <PaperPlaneRight className="size-4" />
             Enviar
           </Button>
         </form>

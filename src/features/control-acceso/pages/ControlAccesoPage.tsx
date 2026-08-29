@@ -1,4 +1,4 @@
-import { Package, Users } from 'lucide-react'
+import { Package, Users } from '@phosphor-icons/react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { RESIDENTE_ACTUAL } from '../lib/residente-actual'
 import { PaqueteriaTab } from '../components/PaqueteriaTab'
@@ -8,7 +8,7 @@ export function ControlAccesoPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Control de acceso</h1>
+        <h1 className="text-2xl font-medium">Control de acceso</h1>
         <p className="text-muted-foreground text-sm">
           Tus paquetes y visitas en portería — {RESIDENTE_ACTUAL.nombre},{' '}
           {RESIDENTE_ACTUAL.unidad}. La operación de portería tendrá un acceso de

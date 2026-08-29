@@ -1,4 +1,4 @@
-import { Clock, Lock } from 'lucide-react'
+import { Clock, Lock } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { formatCierre } from '../lib/format-fecha'
 

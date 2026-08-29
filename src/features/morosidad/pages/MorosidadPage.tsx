@@ -36,7 +36,7 @@ export function MorosidadPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Morosidad</h1>
+        <h1 className="text-2xl font-medium">Morosidad</h1>
         <p className="text-muted-foreground text-sm">
           Cartera vencida del condominio, antigüedad de saldos y gestión de cobranza.
         </p>

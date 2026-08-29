@@ -1,4 +1,4 @@
-import { AlertTriangle, CalendarClock, Clock } from 'lucide-react'
+import { Calendar, Clock, Warning } from '@phosphor-icons/react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { COLOR_ICONO_ESTADO, type NivelEstado } from '@/shared/lib/estado-visual'
@@ -8,9 +8,9 @@ const PRESENTACION: Record<
   EstadoCargo,
   { label: string; nivel: NivelEstado; icono: typeof Clock }
 > = {
-  vencido: { label: 'Vencido', nivel: 'critico', icono: AlertTriangle },
+  vencido: { label: 'Vencido', nivel: 'critico', icono: Warning },
   por_vencer: { label: 'Por vencer', nivel: 'advertencia', icono: Clock },
-  programado: { label: 'Programado', nivel: 'neutral', icono: CalendarClock },
+  programado: { label: 'Programado', nivel: 'neutral', icono: Calendar },
 }
 
 /**

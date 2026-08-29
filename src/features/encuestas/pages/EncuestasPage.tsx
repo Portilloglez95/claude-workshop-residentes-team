@@ -33,7 +33,7 @@ export function EncuestasPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Encuestas</h1>
+        <h1 className="text-2xl font-medium">Encuestas</h1>
         <p className="text-muted-foreground text-sm">
           Lo que se está decidiendo en el condominio.{' '}
           {encuestas &&

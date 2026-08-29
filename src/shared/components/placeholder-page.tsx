@@ -15,7 +15,7 @@ export function PlaceholderPage({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
+        <h1 className="text-2xl font-medium">{title}</h1>
         <p className="text-muted-foreground text-sm">{description}</p>
       </div>
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Clock, ShieldCheck, Users } from 'lucide-react'
+import { Clock, ShieldCheck, Users } from '@phosphor-icons/react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {

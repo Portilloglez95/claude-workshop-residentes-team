@@ -1,4 +1,4 @@
-import { Scale, TriangleAlert, Users, Wallet } from 'lucide-react'
+import { Scales, Warning, Users, Wallet } from '@phosphor-icons/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ResumenCartera } from '../lib/resumen-cartera'
 import { formatMonto } from '../lib/format-monto'
@@ -11,9 +11,9 @@ export function ResumenCarteraCards({ resumen }: { resumen: ResumenCartera }) {
     {
       label: 'Recargos e intereses',
       value: formatMonto(resumen.moraDevengada),
-      icon: TriangleAlert,
+      icon: Warning,
     },
-    { label: 'Saldo > 90 días', value: formatMonto(resumen.saldoMas90), icon: Scale },
+    { label: 'Saldo > 90 días', value: formatMonto(resumen.saldoMas90), icon: Scales },
   ]
 
   return (

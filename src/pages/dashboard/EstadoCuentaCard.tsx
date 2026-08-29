@@ -1,4 +1,11 @@
-import { ArrowRight, Building2, Clock, Download, Landmark, Repeat } from 'lucide-react'
+import {
+  ArrowRight,
+  Bank,
+  Buildings,
+  Clock,
+  Download,
+  Repeat,
+} from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -12,8 +19,8 @@ import { COLOR_ICONO_ESTADO } from '@/shared/lib/estado-visual'
 import { formatMoneda } from '@/shared/lib/format-moneda'
 
 const ICONO_METODO = {
-  tarjeta: Building2,
-  spei: Landmark,
+  tarjeta: Buildings,
+  spei: Bank,
   domiciliacion: Repeat,
 } as const
 

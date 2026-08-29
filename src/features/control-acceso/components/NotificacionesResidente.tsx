@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Bell } from 'lucide-react'
+import { Bell } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Paquete } from '../types'
@@ -54,7 +54,7 @@ export function NotificacionesResidente({
       </Button>
 
       {abierto && (
-        <div className="bg-popover text-popover-foreground ring-foreground/10 absolute right-0 z-50 mt-2 w-72 rounded-lg p-2 shadow-md ring-1">
+        <div className="bg-popover text-popover-foreground absolute right-0 z-50 mt-2 w-72 rounded-lg p-2 shadow-md">
           <div className="flex items-center justify-between px-1 py-1">
             <span className="text-sm font-medium">Notificaciones</span>
             {noLeidas.length > 0 && (

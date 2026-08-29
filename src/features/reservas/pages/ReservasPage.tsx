@@ -27,7 +27,7 @@ export function ReservasPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Reservas</h1>
+        <h1 className="text-2xl font-medium">Reservas</h1>
         <p className="text-muted-foreground text-sm">
           Reserva áreas comunes del condominio y da seguimiento a tus reservas.
         </p>
@@ -71,7 +71,7 @@ export function ReservasPage() {
 
           {proximas.length > 0 && (
             <div className="flex flex-col gap-3">
-              <h2 className="text-sm font-semibold">Próximas</h2>
+              <h2 className="text-sm font-medium">Próximas</h2>
               {proximas.map((reserva) => (
                 <ReservaCard
                   key={reserva.id}
@@ -86,7 +86,7 @@ export function ReservasPage() {
 
           {historial.length > 0 && (
             <div className="flex flex-col gap-3">
-              <h2 className="text-sm font-semibold">Historial</h2>
+              <h2 className="text-sm font-medium">Historial</h2>
               {historial.map((reserva) => (
                 <ReservaCard
                   key={reserva.id}

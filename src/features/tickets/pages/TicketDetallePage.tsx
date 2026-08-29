@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from '@phosphor-icons/react'
 import { Link, useParams } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -61,7 +61,7 @@ export function TicketDetallePage() {
           </Card>
 
           <div className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold">
+            <h2 className="text-sm font-medium">
               Historial de respuestas
               {ticket.respuestas.length > 0 && ` (${ticket.respuestas.length})`}
             </h2>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, Pin } from 'lucide-react'
+import { CaretDown, PushPin } from '@phosphor-icons/react'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { Aviso } from '../types'
@@ -46,7 +46,7 @@ export function AvisoCard({ aviso }: { aviso: Aviso }) {
             <span className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
               <span className="flex items-center gap-1.5">
                 {aviso.fijado && (
-                  <Pin
+                  <PushPin
                     className="text-muted-foreground size-3.5 shrink-0"
                     aria-label="Fijado"
                   />
@@ -77,7 +77,7 @@ export function AvisoCard({ aviso }: { aviso: Aviso }) {
             {cuerpoLargo && (
               <span className="text-primary mt-1 flex items-center gap-1 text-xs font-medium">
                 {expandido ? 'Leer menos' : 'Leer más'}
-                <ChevronDown
+                <CaretDown
                   className={cn('size-3 transition-transform', expandido && 'rotate-180')}
                 />
               </span>

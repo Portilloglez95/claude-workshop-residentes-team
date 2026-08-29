@@ -1,4 +1,4 @@
-import { Send } from 'lucide-react'
+import { PaperPlaneRight } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -56,7 +56,7 @@ export function CuentaMorosaFila({ cuenta }: { cuenta: CuentaMorosa }) {
       <TableCell className="text-right">
         {gestion && (
           <Button variant="outline" size="sm" onClick={alGestionar}>
-            <Send className="size-3.5" />
+            <PaperPlaneRight className="size-3.5" />
             {gestion.accion}
           </Button>
         )}

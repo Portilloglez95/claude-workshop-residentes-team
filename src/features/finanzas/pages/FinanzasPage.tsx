@@ -25,7 +25,7 @@ export function FinanzasPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Finanzas</h1>
+        <h1 className="text-2xl font-medium">Finanzas</h1>
         <p className="text-muted-foreground text-sm">
           Cuotas, gastos y transparencia financiera del condominio.
         </p>

@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { ImagePlus, X } from 'lucide-react'
+import { Image, X } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 
 /**
@@ -58,7 +58,7 @@ export function FotoTicketInput({
           className="w-fit"
           onClick={() => inputRef.current?.click()}
         >
-          <ImagePlus className="size-4" />
+          <Image className="size-4" />
           Agregar foto
         </Button>
       )}

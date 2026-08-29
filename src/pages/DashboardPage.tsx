@@ -1,4 +1,4 @@
-import { Bell, CalendarClock, Users } from 'lucide-react'
+import { Bell, Calendar, Users } from '@phosphor-icons/react'
 import { Link } from 'react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -16,7 +16,7 @@ import { ProximosCargosCard } from './dashboard/ProximosCargosCard'
 
 const ACCESOS_COMUNIDAD = [
   { label: 'Residentes', value: '128', icon: Users, to: '/residentes' },
-  { label: 'Reservas hoy', value: '3', icon: CalendarClock, to: '/reservas' },
+  { label: 'Reservas hoy', value: '3', icon: Calendar, to: '/reservas' },
   { label: 'Avisos activos', value: '2', icon: Bell, to: '/avisos' },
 ]
 
@@ -33,7 +33,7 @@ export function DashboardPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Panel</h1>
+        <h1 className="text-2xl font-medium">Panel</h1>
         <p className="text-muted-foreground text-sm">
           Tu estado de cuenta y el resumen del condominio.
         </p>

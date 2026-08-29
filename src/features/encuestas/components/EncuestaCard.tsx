@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CircleDot, Lock, TriangleAlert } from 'lucide-react'
+import { Circle, Lock, Warning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -58,7 +58,8 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
               </Badge>
             ) : (
               <Badge variant="outline" className="gap-1.5 font-normal">
-                <CircleDot
+                <Circle
+                  weight="fill"
                   className={cn('size-3', COLOR_ICONO_ESTADO.bueno)}
                   aria-hidden
                 />
@@ -67,7 +68,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             )}
             {urgente && (
               <Badge variant="outline" className="gap-1.5 font-normal">
-                <TriangleAlert
+                <Warning
                   className={cn('size-3', COLOR_ICONO_ESTADO.advertencia)}
                   aria-hidden
                 />
@@ -79,7 +80,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             )}
           </div>
 
-          <h2 className="text-base leading-snug font-semibold text-balance">
+          <h2 className="text-base leading-snug font-medium text-balance">
             {encuesta.pregunta}
           </h2>
 

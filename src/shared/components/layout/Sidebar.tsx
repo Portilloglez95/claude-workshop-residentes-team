@@ -1,4 +1,4 @@
-import { Building2 } from 'lucide-react'
+import { Buildings } from '@phosphor-icons/react'
 import { NavLink } from 'react-router'
 import { cn } from '@/lib/utils'
 import { navItems } from './nav-items'
@@ -7,7 +7,7 @@ export function Sidebar() {
   return (
     <aside className="bg-sidebar text-sidebar-foreground hidden w-60 shrink-0 border-r md:flex md:flex-col">
       <div className="flex h-14 items-center gap-2 border-b px-4">
-        <Building2 className="size-5" />
+        <Buildings className="size-5" />
         <span className="font-semibold">Condoo</span>
       </div>
 

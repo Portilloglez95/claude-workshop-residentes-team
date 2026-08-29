@@ -1,4 +1,4 @@
-import { Check, Trophy } from 'lucide-react'
+import { Check, Trophy } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import type { ResultadoOpcion } from '../lib/calcular-resultados'
 

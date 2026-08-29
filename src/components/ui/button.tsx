@@ -9,16 +9,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+        // Nocturne: los botones son un borde/texto de acento sobre fondo
+        // transparente, nunca un relleno — incluido el primario.
+        default:
+          'border-primary text-primary bg-transparent hover:bg-primary/12 active:bg-primary/22 aria-expanded:bg-primary/12',
         outline:
-          'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+          'border-border bg-transparent hover:bg-foreground/5 active:bg-foreground/10 aria-expanded:bg-foreground/5',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
+          'border-border bg-transparent hover:bg-foreground/5 active:bg-foreground/10 aria-expanded:bg-foreground/5',
         ghost:
-          'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
+          'border-transparent text-primary hover:bg-primary/10 active:bg-primary/18 aria-expanded:bg-primary/10',
         destructive:
-          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'border-destructive text-destructive bg-transparent hover:bg-destructive/12 active:bg-destructive/20',
+        link: 'border-transparent text-primary underline-offset-4 hover:underline',
       },
       size: {
         default:

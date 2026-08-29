@@ -1,4 +1,4 @@
-import { CircleCheck, TriangleAlert } from 'lucide-react'
+import { CheckCircle, Warning } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { Meter } from '@/shared/components/charts/Meter'
 import { COLOR_ICONO_ESTADO, type NivelEstado } from '@/shared/lib/estado-visual'
@@ -26,7 +26,7 @@ export function ParticipacionEncuesta({
     : quorumAlcanzado
       ? 'bueno'
       : 'advertencia'
-  const Icono = quorumAlcanzado ? CircleCheck : TriangleAlert
+  const Icono = quorumAlcanzado ? CheckCircle : Warning
 
   return (
     <div className="flex flex-col gap-1.5">
