@@ -1,4 +1,12 @@
-import { Bell, CalendarClock, LayoutDashboard, Users, Wallet } from 'lucide-react'
+import {
+  Bell,
+  CalendarClock,
+  LayoutDashboard,
+  LifeBuoy,
+  Users,
+  Vote,
+  Wallet,
+} from 'lucide-react'
 
 /**
  * Navegación principal del panel. Cada feature nueva agrega su propia
@@ -10,4 +18,6 @@ export const navItems = [
   { to: '/finanzas', label: 'Finanzas', icon: Wallet, end: false },
   { to: '/reservas', label: 'Reservas', icon: CalendarClock, end: false },
   { to: '/avisos', label: 'Avisos', icon: Bell, end: false },
+  { to: '/encuestas', label: 'Encuestas', icon: Vote, end: false },
+  { to: '/tickets', label: 'Tickets', icon: LifeBuoy, end: false },
 ] as const
