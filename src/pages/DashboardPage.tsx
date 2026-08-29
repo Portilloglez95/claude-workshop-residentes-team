@@ -1,34 +1,96 @@
-import { Bell, CalendarClock, Users, Wallet } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Bell, CalendarClock, Users } from 'lucide-react'
+import { Link } from 'react-router'
+import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import {
+  useGastosFinanzas,
+  useMorosidadFinanzas,
+  useResumenPanel,
+} from '@/features/finanzas/hooks/use-finanzas'
+import { EgresosCategoriaCard } from './dashboard/EgresosCategoriaCard'
+import { EstadoCuentaCard } from './dashboard/EstadoCuentaCard'
+import { KpiRow } from './dashboard/KpiRow'
+import { PagosMensualesCard } from './dashboard/PagosMensualesCard'
+import { PanelSkeleton } from './dashboard/PanelSkeleton'
+import { ProximosCargosCard } from './dashboard/ProximosCargosCard'
 
-const stats = [
-  { label: 'Residentes', value: '128', icon: Users },
-  { label: 'Pagos pendientes', value: '14', icon: Wallet },
-  { label: 'Reservas hoy', value: '3', icon: CalendarClock },
-  { label: 'Avisos activos', value: '2', icon: Bell },
+const ACCESOS_COMUNIDAD = [
+  { label: 'Residentes', value: '128', icon: Users, to: '/residentes' },
+  { label: 'Reservas hoy', value: '3', icon: CalendarClock, to: '/reservas' },
+  { label: 'Avisos activos', value: '2', icon: Bell, to: '/avisos' },
 ]
 
 export function DashboardPage() {
+  const panelQuery = useResumenPanel()
+  const { data: gastos } = useGastosFinanzas()
+  const { data: morosidad } = useMorosidadFinanzas()
+
+  const panel = panelQuery.data
+  // Al refrescar se sostiene el render anterior en opacidad reducida: sin
+  // parpadeo de skeleton y sin salto de layout.
+  const refrescando = panelQuery.isFetching && !panelQuery.isLoading
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Panel</h1>
-        <p className="text-muted-foreground text-sm">Resumen general del condominio.</p>
+        <p className="text-muted-foreground text-sm">
+          Tu estado de cuenta y el resumen del condominio.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map(({ label, value, icon: Icon }) => (
-          <Card key={label}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">{label}</CardTitle>
-              <Icon className="text-muted-foreground size-4" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{value}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {panelQuery.isLoading && <PanelSkeleton />}
+
+      {panelQuery.isError && (
+        <p className="text-destructive text-sm">
+          No se pudo cargar el panel. Reintenta en unos momentos.
+        </p>
+      )}
+
+      {panel && (
+        <div
+          className={cn(
+            'flex flex-col gap-4 transition-opacity',
+            refrescando && 'opacity-60',
+          )}
+        >
+          <div className="grid gap-4 lg:grid-cols-3">
+            <EstadoCuentaCard panel={panel} />
+            <ProximosCargosCard cargos={panel.proximosCargos} />
+          </div>
+
+          <KpiRow panel={panel} gastos={gastos} morosidad={morosidad} />
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <PagosMensualesCard serie={panel.serieMensual} />
+            {gastos && <EgresosCategoriaCard gastos={gastos} />}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {ACCESOS_COMUNIDAD.map(({ label, value, icon: Icon, to }) => (
+              <Link
+                key={label}
+                to={to}
+                className="focus-visible:ring-ring rounded-xl focus-visible:ring-2 focus-visible:outline-none"
+              >
+                <Card className="hover:border-primary/40 h-full transition-colors">
+                  <CardContent className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        {label}
+                      </div>
+                      <div className="font-heading mt-1 text-2xl font-medium">
+                        {value}
+                      </div>
+                    </div>
+                    <Icon className="text-muted-foreground size-4 shrink-0" aria-hidden />
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

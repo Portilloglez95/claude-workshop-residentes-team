@@ -3,6 +3,7 @@ import {
   fetchCuentaFinanzas,
   fetchGastosFinanzas,
   fetchMorosidadFinanzas,
+  fetchResumenPanel,
   fetchTransparenciaFinanzas,
 } from '../api/finanzas.api'
 
@@ -31,5 +32,12 @@ export function useMorosidadFinanzas() {
   return useQuery({
     queryKey: ['finanzas', 'morosidad'],
     queryFn: fetchMorosidadFinanzas,
+  })
+}
+
+export function useResumenPanel() {
+  return useQuery({
+    queryKey: ['finanzas', 'panel'],
+    queryFn: fetchResumenPanel,
   })
 }
