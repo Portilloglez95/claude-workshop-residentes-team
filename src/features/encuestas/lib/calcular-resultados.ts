@@ -6,6 +6,8 @@ export type ResultadoOpcion = {
   /** 0–100, redondeado. Es 0 cuando todavía no hay ningún voto. */
   porcentaje: number
   esVotoPropio: boolean
+  /** Va en cabeza. Puede ser más de una opción si hay empate. */
+  esGanadora: boolean
 }
 
 export type ResultadosEncuesta = {
@@ -13,6 +15,11 @@ export type ResultadosEncuesta = {
   totalVotos: number
   /** Opción elegida por este residente, venga del backend o del cliente. */
   opcionVotada: string | null
+  /** Participación sobre el padrón, 0–100. */
+  participacion: number
+  /** Votos que faltan para alcanzar el quórum. 0 si ya se alcanzó o no se exige. */
+  votosParaQuorum: number
+  quorumAlcanzado: boolean
 }
 
 /**
@@ -31,6 +38,9 @@ export function calcularResultados(
     (opcion) => opcion.votos + (sumarVotoLocal && opcion.id === votoLocal ? 1 : 0),
   )
   const totalVotos = votosPorOpcion.reduce((suma, votos) => suma + votos, 0)
+  const maxVotos = Math.max(...votosPorOpcion)
+
+  const votosQuorum = Math.ceil(encuesta.totalElegibles * encuesta.quorumRequerido)
 
   return {
     resultados: encuesta.opciones.map((opcion, indice) => ({
@@ -39,8 +49,15 @@ export function calcularResultados(
       porcentaje:
         totalVotos === 0 ? 0 : Math.round((votosPorOpcion[indice] / totalVotos) * 100),
       esVotoPropio: opcion.id === opcionVotada,
+      esGanadora: totalVotos > 0 && votosPorOpcion[indice] === maxVotos,
     })),
     totalVotos,
     opcionVotada,
+    participacion:
+      encuesta.totalElegibles === 0
+        ? 0
+        : Math.round((totalVotos / encuesta.totalElegibles) * 100),
+    votosParaQuorum: Math.max(0, votosQuorum - totalVotos),
+    quorumAlcanzado: totalVotos >= votosQuorum,
   }
 }

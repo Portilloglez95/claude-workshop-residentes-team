@@ -9,6 +9,7 @@ import { ResidentesPage } from '@/features/residentes/pages/ResidentesPage'
 import { NuevoTicketPage } from '@/features/tickets/pages/NuevoTicketPage'
 import { TicketDetallePage } from '@/features/tickets/pages/TicketDetallePage'
 import { TicketsPage } from '@/features/tickets/pages/TicketsPage'
+import { WhatsAppPage } from '@/features/whatsapp/pages/WhatsAppPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
       { path: 'tickets', element: <TicketsPage /> },
       { path: 'tickets/nuevo', element: <NuevoTicketPage /> },
       { path: 'tickets/:id', element: <TicketDetallePage /> },
+      { path: 'whatsapp', element: <WhatsAppPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

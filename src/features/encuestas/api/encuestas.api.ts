@@ -24,6 +24,8 @@ const MOCK_ENCUESTAS: Encuesta[] = [
     fechaApertura: hace(2),
     fechaCierre: en(1),
     autor: 'Administración',
+    totalElegibles: 120,
+    quorumRequerido: 0.5,
     estado: 'abierta',
     opciones: [
       { id: 'e1-o1', texto: '7:00 a.m. – 9:00 p.m. (ampliado)', votos: 34 },
@@ -40,6 +42,8 @@ const MOCK_ENCUESTAS: Encuesta[] = [
     fechaApertura: hace(5),
     fechaCierre: en(6),
     autor: 'Junta Directiva',
+    totalElegibles: 120,
+    quorumRequerido: 0.5,
     estado: 'abierta',
     opciones: [
       { id: 'e2-o1', texto: 'A favor', votos: 41 },
@@ -56,6 +60,8 @@ const MOCK_ENCUESTAS: Encuesta[] = [
     fechaApertura: hace(9),
     fechaCierre: en(3),
     autor: 'Comité de Sustentabilidad',
+    totalElegibles: 120,
+    quorumRequerido: 0,
     estado: 'abierta',
     opciones: [
       { id: 'e3-o1', texto: 'Martes', votos: 22 },
@@ -72,6 +78,8 @@ const MOCK_ENCUESTAS: Encuesta[] = [
     fechaApertura: hace(40),
     fechaCierre: hace(12),
     autor: 'Junta Directiva',
+    totalElegibles: 120,
+    quorumRequerido: 0.5,
     estado: 'cerrada',
     opciones: [
       { id: 'e4-o1', texto: 'Sí, hasta la medianoche', votos: 19 },
@@ -87,6 +95,8 @@ const MOCK_ENCUESTAS: Encuesta[] = [
     fechaApertura: hace(70),
     fechaCierre: hace(45),
     autor: 'Administración',
+    totalElegibles: 120,
+    quorumRequerido: 0.5,
     estado: 'cerrada',
     opciones: [
       { id: 'e5-o1', texto: 'Telmex', votos: 26 },

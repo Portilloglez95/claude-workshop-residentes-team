@@ -22,6 +22,13 @@ export type Encuesta = {
    * ver `estaCerrada()`.
    */
   estado: EstadoEncuesta
+  /** Residentes con derecho a voto al momento de abrir la encuesta. */
+  totalElegibles: number
+  /**
+   * Fracción de `totalElegibles` (0–1) necesaria para que el resultado sea
+   * vinculante. Las consultas informativas usan 0.
+   */
+  quorumRequerido: number
   opciones: OpcionEncuesta[]
   /**
    * Opción que el backend ya tiene registrada para este residente (voto
