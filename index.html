@@ -6,7 +6,7 @@
 <title>Control de Acceso · Condominio</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body data-rol="porteria">
 
   <header class="topbar">
     <div class="topbar__brand">
@@ -16,11 +16,42 @@
         <p>Demo · Gestión de Condominios</p>
       </div>
     </div>
+
+    <div class="topbar__controls">
+      <div class="role-toggle" role="group" aria-label="Vista">
+        <button class="role-btn role-btn--active" id="role-porteria" data-role="porteria">🛡️ Portería</button>
+        <button class="role-btn" id="role-residente" data-role="residente">🏠 Residente</button>
+      </div>
+
+      <div class="bell-wrap">
+        <button class="bell-btn" id="bell-btn" hidden title="Notificaciones" aria-label="Notificaciones">
+          🔔<span class="bell-badge" id="bell-badge" hidden>0</span>
+        </button>
+        <div class="notif-panel" id="notif-panel" hidden>
+          <div class="notif-panel__header">
+            <h4>Notificaciones</h4>
+            <button id="notif-marcar-leidas" class="btn btn--small btn--muted">Marcar leídas</button>
+          </div>
+          <ul class="notif-list" id="notif-list"></ul>
+          <p class="empty-state empty-state--small" id="notif-empty">Sin notificaciones.</p>
+        </div>
+      </div>
+    </div>
+
     <nav class="topbar__tabs" role="tablist" aria-label="Secciones">
       <button class="tab tab--active" data-target="paqueteria" role="tab" aria-selected="true">📦 Paquetería</button>
       <button class="tab" data-target="visitas" role="tab" aria-selected="false">🧑‍🤝‍🧑 Visitas</button>
     </nav>
   </header>
+
+  <!-- Solo visible en modo Residente: identidad simulada (sin login real) -->
+  <div class="identity-bar" id="identity-bar" hidden>
+    <span class="identity-bar__icon">🏠</span>
+    <label for="identidad-input">Tu nombre / depto</label>
+    <input type="text" id="identidad-input" placeholder="Ej. Depto 302 - María López">
+    <button id="identidad-guardar" class="btn btn--small btn--ghost">Guardar</button>
+    <span class="identity-bar__hint">Demo sin login real: filtramos por coincidencia de texto.</span>
+  </div>
 
   <main class="content">
 
@@ -28,8 +59,10 @@
     <section id="paqueteria" class="panel panel--active" role="tabpanel">
       <div class="panel__header">
         <h2>Paquetería</h2>
-        <p>Registro y seguimiento de paquetes recibidos en portería.</p>
+        <p id="paq-descripcion">Registro y seguimiento de paquetes recibidos en portería.</p>
       </div>
+
+      <p class="scope-note scope-note--residente" data-residente-only id="paq-scope-note"></p>
 
       <div class="stats-row">
         <div class="stat-card">
@@ -46,8 +79,8 @@
         </div>
       </div>
 
-      <div class="grid-2">
-        <form class="card form" id="form-paquete">
+      <div class="grid-2" id="paq-grid">
+        <form class="card form" id="form-paquete" data-porteria-only>
           <h3>Registrar nuevo paquete</h3>
 
           <label for="paq-residente">Residente / Depto</label>
@@ -77,6 +110,7 @@
           </div>
           <ul class="list" id="lista-paquetes"></ul>
           <p class="empty-state" id="paq-empty">No hay paquetes registrados aún.</p>
+          <p class="empty-state" id="paq-sin-identidad" hidden>Ingresa tu nombre/depto arriba para ver tus paquetes.</p>
         </div>
       </div>
     </section>
@@ -85,17 +119,19 @@
     <section id="visitas" class="panel" role="tabpanel">
       <div class="panel__header">
         <h2>Visitas</h2>
-        <p>Registro de entrada y salida de visitantes al condominio.</p>
+        <p id="vis-descripcion">Registro de entrada y salida de visitantes al condominio.</p>
       </div>
+
+      <p class="scope-note scope-note--residente" data-residente-only id="vis-scope-note"></p>
 
       <div class="stats-row">
         <div class="stat-card">
-          <span class="stat-card__value" id="stat-activas">0</span>
-          <span class="stat-card__label">Visitas activas</span>
+          <span class="stat-card__value" id="stat-esperadas">0</span>
+          <span class="stat-card__label" id="stat-esperadas-label">Esperadas</span>
         </div>
         <div class="stat-card">
-          <span class="stat-card__value" id="stat-finalizadas">0</span>
-          <span class="stat-card__label">Finalizadas hoy</span>
+          <span class="stat-card__value" id="stat-activas">0</span>
+          <span class="stat-card__label">En el condominio</span>
         </div>
         <div class="stat-card">
           <span class="stat-card__value" id="stat-total-vis">0</span>
@@ -105,7 +141,8 @@
 
       <div class="grid-2">
         <form class="card form" id="form-visita">
-          <h3>Registrar entrada de visitante</h3>
+          <h3 id="vis-form-title">Pre-autorizar visita</h3>
+          <p class="form-hint" id="vis-form-hint">Agrega una foto del visitante o de su identificación para que portería lo reconozca sin pedirle la ID.</p>
 
           <label for="vis-nombre">Nombre del visitante</label>
           <input type="text" id="vis-nombre" placeholder="Ej. Carlos Hernández" required>
@@ -122,10 +159,18 @@
             <option value="Otro">Otro</option>
           </select>
 
-          <label for="vis-identificacion">Identificación (opcional)</label>
+          <label for="vis-identificacion">No. de identificación (opcional)</label>
           <input type="text" id="vis-identificacion" placeholder="Ej. INE 1234">
 
-          <button type="submit" class="btn btn--primary">Registrar entrada</button>
+          <label for="vis-foto-visitante">Foto del visitante (opcional)</label>
+          <input type="file" accept="image/*" capture="environment" id="vis-foto-visitante">
+          <img class="photo-preview" id="vis-foto-visitante-preview" hidden alt="Vista previa del visitante">
+
+          <label for="vis-foto-id">Foto de identificación (opcional)</label>
+          <input type="file" accept="image/*" capture="environment" id="vis-foto-id">
+          <img class="photo-preview" id="vis-foto-id-preview" hidden alt="Vista previa de identificación">
+
+          <button type="submit" class="btn btn--primary" id="vis-submit-btn">Pre-autorizar visita</button>
         </form>
 
         <div class="card">
@@ -134,17 +179,28 @@
             <input type="search" id="vis-buscar" placeholder="Buscar por nombre o destino...">
             <select id="vis-filtro-estado">
               <option value="todos">Todos los estados</option>
-              <option value="activa">Activas</option>
+              <option value="esperada">Esperadas</option>
+              <option value="activa">En el condominio</option>
               <option value="finalizada">Finalizadas</option>
+              <option value="cancelada">Canceladas</option>
             </select>
           </div>
           <ul class="list" id="lista-visitas"></ul>
           <p class="empty-state" id="vis-empty">No hay visitas registradas aún.</p>
+          <p class="empty-state" id="vis-sin-identidad" hidden>Ingresa tu nombre/depto arriba para ver tus visitas.</p>
         </div>
       </div>
     </section>
 
   </main>
+
+  <!-- Lightbox para ampliar fotos -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lightbox__close" id="lightbox-close" aria-label="Cerrar">✕</button>
+    <img id="lightbox-img" src="" alt="Foto ampliada">
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
 
   <footer class="footer">
     <p>Demo interna · Sección Control de Acceso (Roberto &amp; Lupita) · Sin integraciones ni backend</p>
