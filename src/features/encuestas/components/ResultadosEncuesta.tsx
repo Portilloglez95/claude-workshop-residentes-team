@@ -31,15 +31,15 @@ function BarraResultado({
           )}
           {opcion.texto}
         </span>
-        <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
-          <span className={cn(destacada && 'text-foreground font-medium')}>
+        <span className="shrink-0 text-xs text-[var(--tinta-suave)] tabular-nums">
+          <span className={cn(destacada && 'font-semibold text-[var(--tinta)]')}>
             {porcentaje}%
           </span>{' '}
           · {votos} {votos === 1 ? 'voto' : 'votos'}
         </span>
       </div>
 
-      <div className="bg-muted h-2.5 overflow-hidden rounded-[4px]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-[var(--pista)]">
         <div
           className={cn(
             'h-full rounded-[4px] bg-[var(--serie)] dark:bg-[var(--serie-oscuro)]',

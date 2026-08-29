@@ -4,7 +4,6 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { Encuesta } from '../types'
 import { useVotosStore } from '../store/use-votos-store'
@@ -52,10 +51,10 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
     <Card
       ref={ref}
       className={cn(
-        'transition-[opacity,transform,border-color] duration-500 ease-out',
+        'rounded-[20px] border-0 bg-[var(--tarjeta)] p-1.5 shadow-[var(--sombra)] ring-0',
+        'transition-[opacity,transform] duration-500 ease-out',
         'motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none',
         visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
-        urgente && 'border-foreground/25',
       )}
     >
       <CardContent className="flex flex-col gap-4">
@@ -95,13 +94,13 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             {encuesta.pregunta}
           </h2>
 
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm leading-[22px] text-[var(--tinta-suave)]">
             {descripcion}
             {descripcionLarga && (
               <button
                 type="button"
                 onClick={() => setExpandida((valor) => !valor)}
-                className="text-foreground ml-1 font-medium underline-offset-4 hover:underline"
+                className="ml-1 font-semibold text-[var(--acento)] underline-offset-4 hover:underline"
               >
                 {expandida ? 'Leer menos' : 'Leer más'}
               </button>
@@ -109,7 +108,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
           </p>
         </div>
 
-        <Separator />
+        <div className="h-px bg-[var(--linea-tenue)]" />
 
         {mostrarResultados ? (
           <div className="flex flex-col gap-3">
@@ -143,7 +142,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
           />
         )}
 
-        <Separator />
+        <div className="h-px bg-[var(--linea-tenue)]" />
 
         <div className="flex flex-col gap-2">
           <ParticipacionEncuesta
@@ -152,7 +151,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             exigeQuorum={encuesta.quorumRequerido > 0}
             cerrada={cerrada}
           />
-          <div className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--tinta-suave)]">
             <PlazoEncuesta
               fechaCierre={encuesta.fechaCierre}
               cerrada={cerrada}

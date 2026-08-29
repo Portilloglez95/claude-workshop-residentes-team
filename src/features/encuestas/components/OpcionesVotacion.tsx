@@ -69,19 +69,19 @@ export function OpcionesVotacion({
               onKeyDown={(evento) => moverFoco(evento, indice)}
               style={varsDeColor(indice)}
               className={cn(
-                'group flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-sm',
+                'group flex items-center gap-3 rounded-[14px] border-[1.5px] px-4 py-3.5 text-left text-[15px]',
                 'focus-visible:ring-ring/50 transition-colors focus-visible:ring-3 focus-visible:outline-none',
                 elegida
                   ? 'bg-muted/50 border-[var(--serie)] font-medium dark:border-[var(--serie-oscuro)]'
-                  : 'border-border hover:border-foreground/20 hover:bg-muted/40',
+                  : 'border-[var(--linea)] hover:border-[var(--acento)]/40',
               )}
             >
               <span
                 className={cn(
-                  'flex size-4 shrink-0 items-center justify-center rounded-full border transition-colors',
+                  'flex size-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors',
                   elegida
                     ? 'border-[var(--serie)] dark:border-[var(--serie-oscuro)]'
-                    : 'border-muted-foreground/40',
+                    : 'border-[var(--linea)]',
                 )}
                 aria-hidden
               >
@@ -101,6 +101,7 @@ export function OpcionesVotacion({
           size="sm"
           disabled={!cambiado}
           onClick={() => seleccion && onConfirmar(seleccion)}
+          className="h-11 flex-grow rounded-[14px] bg-[var(--acento)] text-[15px] font-semibold text-[var(--acento-contraste)] hover:bg-[var(--acento)]/90"
         >
           {votoActual === null ? 'Enviar voto' : 'Guardar cambio'}
         </Button>

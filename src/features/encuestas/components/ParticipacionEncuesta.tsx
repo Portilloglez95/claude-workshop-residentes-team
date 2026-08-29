@@ -29,22 +29,24 @@ export function ParticipacionEncuesta({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="text-muted-foreground flex items-baseline justify-between gap-3 text-xs">
+      <div className="flex items-baseline justify-between gap-3 text-xs text-[var(--tinta-suave)]">
         <span>
-          <span className="text-foreground font-medium tabular-nums">{totalVotos}</span>{' '}
-          de {totalElegibles} residentes
+          <span className="text-[15px] font-bold text-[var(--tinta)] tabular-nums">
+            {totalVotos}
+          </span>{' '}
+          de {totalElegibles} vecinos
         </span>
         <span className="tabular-nums">{participacion}% de participación</span>
       </div>
 
-      <div className="bg-muted h-1.5 overflow-hidden rounded-[3px]" aria-hidden>
+      <div className="h-2 overflow-hidden rounded-full bg-[var(--pista)]" aria-hidden>
         <div
           className={cn(
-            'h-full rounded-[3px] transition-[width] duration-700 ease-out',
+            'h-full rounded-full transition-[width] duration-700 ease-out',
             'motion-reduce:transition-none',
             // Sin quórum exigido la barra es informativa: tono neutro, sin
             // sugerir que hay un umbral que cumplir.
-            !exigeQuorum && 'bg-muted-foreground/50',
+            !exigeQuorum && 'bg-[var(--tinta-suave)]/50',
           )}
           style={{
             width: `${participacion}%`,
@@ -60,7 +62,11 @@ export function ParticipacionEncuesta({
             style={{ color: color.claro }}
             aria-hidden
           />
-          <span className={quorumAlcanzado ? 'text-muted-foreground' : 'text-foreground'}>
+          <span
+            className={
+              quorumAlcanzado ? 'text-[var(--tinta-suave)]' : 'text-[var(--tinta)]'
+            }
+          >
             {quorumAlcanzado
               ? 'Quórum alcanzado — el resultado es vinculante.'
               : cerrada
