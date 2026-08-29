@@ -2,8 +2,10 @@ import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/shared/components/layout/AppLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { AvisosPage } from '@/features/avisos/pages/AvisosPage'
+import { ControlAccesoPage } from '@/features/control-acceso/pages/ControlAccesoPage'
 import { EncuestasPage } from '@/features/encuestas/pages/EncuestasPage'
 import { FinanzasPage } from '@/features/finanzas/pages/FinanzasPage'
+import { MorosidadPage } from '@/features/morosidad/pages/MorosidadPage'
 import { ReservasPage } from '@/features/reservas/pages/ReservasPage'
 import { ResidentesPage } from '@/features/residentes/pages/ResidentesPage'
 import { NuevoTicketPage } from '@/features/tickets/pages/NuevoTicketPage'
@@ -28,10 +30,12 @@ export const router = createBrowserRouter([
       { path: 'reservas', element: <ReservasPage /> },
       { path: 'avisos', element: <AvisosPage /> },
       { path: 'encuestas', element: <EncuestasPage /> },
+      { path: 'morosidad', element: <MorosidadPage /> },
       { path: 'tickets', element: <TicketsPage /> },
       { path: 'tickets/nuevo', element: <NuevoTicketPage /> },
       { path: 'tickets/:id', element: <TicketDetallePage /> },
       { path: 'whatsapp', element: <WhatsAppPage /> },
+      { path: 'control-acceso', element: <ControlAccesoPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
