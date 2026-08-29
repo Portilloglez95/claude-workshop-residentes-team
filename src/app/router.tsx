@@ -6,6 +6,7 @@ import { ControlAccesoPage } from '@/features/control-acceso/pages/ControlAcceso
 import { EncuestasPage } from '@/features/encuestas/pages/EncuestasPage'
 import { FinanzasPage } from '@/features/finanzas/pages/FinanzasPage'
 import { MorosidadPage } from '@/features/morosidad/pages/MorosidadPage'
+import { NuevaReservaPage } from '@/features/reservas/pages/NuevaReservaPage'
 import { ReservasPage } from '@/features/reservas/pages/ReservasPage'
 import { ResidentesPage } from '@/features/residentes/pages/ResidentesPage'
 import { NuevoTicketPage } from '@/features/tickets/pages/NuevoTicketPage'
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: 'residentes', element: <ResidentesPage /> },
       { path: 'finanzas', element: <FinanzasPage /> },
       { path: 'reservas', element: <ReservasPage /> },
+      { path: 'reservas/:id', element: <NuevaReservaPage /> },
       { path: 'avisos', element: <AvisosPage /> },
       { path: 'encuestas', element: <EncuestasPage /> },
       { path: 'morosidad', element: <MorosidadPage /> },
