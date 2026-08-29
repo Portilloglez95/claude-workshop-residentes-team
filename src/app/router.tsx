@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/shared/components/layout/AppLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { AvisosPage } from '@/features/avisos/pages/AvisosPage'
+import { ControlAccesoPage } from '@/features/control-acceso/pages/ControlAccesoPage'
 import { EncuestasPage } from '@/features/encuestas/pages/EncuestasPage'
 import { FinanzasPage } from '@/features/finanzas/pages/FinanzasPage'
 import { ReservasPage } from '@/features/reservas/pages/ReservasPage'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: 'tickets/nuevo', element: <NuevoTicketPage /> },
       { path: 'tickets/:id', element: <TicketDetallePage /> },
       { path: 'whatsapp', element: <WhatsAppPage /> },
+      { path: 'control-acceso', element: <ControlAccesoPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   MessageCircle,
+  ShieldCheck,
   TriangleAlert,
   Users,
   Vote,
@@ -23,4 +24,5 @@ export const navItems = [
   { to: '/encuestas', label: 'Encuestas', icon: Vote, end: false },
   { to: '/tickets', label: 'Tickets', icon: LifeBuoy, end: false },
   { to: '/whatsapp', label: 'WhatsApp', icon: MessageCircle, end: false },
+  { to: '/control-acceso', label: 'Control de acceso', icon: ShieldCheck, end: false },
 ] as const
