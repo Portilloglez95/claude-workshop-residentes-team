@@ -1,56 +1,79 @@
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { WhatsAppButton } from '../components/WhatsAppButton'
-import { MENSAJE_POR_DEFECTO, numeroAdministracionVisible } from '../lib/wa-link'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { SendHorizontal } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { MensajeBubble } from '../components/MensajeBubble'
+import { useConversacion } from '../hooks/use-conversacion'
+import { useEnviarMensaje } from '../hooks/use-enviar-mensaje'
 
 export function WhatsAppPage() {
-  const [mensaje, setMensaje] = useState(MENSAJE_POR_DEFECTO)
+  const { mensajes, isLoading, isError } = useConversacion()
+  const enviarMensaje = useEnviarMensaje()
+  const [texto, setTexto] = useState('')
+  const finRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    finRef.current?.scrollIntoView({ block: 'end' })
+  }, [mensajes.length])
+
+  function handleSubmit(evento: FormEvent) {
+    evento.preventDefault()
+    const valor = texto.trim()
+    if (!valor) return
+    enviarMensaje.mutate(valor)
+    setTexto('')
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">WhatsApp</h1>
         <p className="text-muted-foreground text-sm">
-          Línea directa con administración para temas urgentes que necesitan atención
-          humana.
+          Chat directo con administración, integrado al portal. Por dentro la conversación
+          viaja por WhatsApp — no necesitas salir de la app.
         </p>
       </div>
 
-      <Card className="max-w-xl">
-        <CardHeader>
-          <CardTitle>Contactar a administración</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <p className="text-muted-foreground text-sm">
-            Úsalo para emergencias o situaciones que necesitan respuesta inmediata de una
-            persona — por ejemplo, una fuga activa o un problema de seguridad ahora mismo.
-            Para reportar fallas o quejas con seguimiento usa <strong>Tickets</strong>;
-            para comunicados generales del condominio revisa <strong>Avisos</strong>.
-          </p>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="mensaje">Mensaje (opcional)</Label>
-            <Textarea
-              id="mensaje"
-              rows={3}
-              value={mensaje}
-              onChange={(evento) => setMensaje(evento.target.value)}
-            />
-            <p className="text-muted-foreground text-xs">
-              Se abrirá WhatsApp con este mensaje ya escrito — puedes editarlo ahí mismo
-              antes de enviarlo.
-            </p>
+      <div className="border-border bg-card flex max-w-xl flex-col overflow-hidden rounded-xl border">
+        <header className="flex items-center gap-3 border-b px-4 py-3">
+          <div className="bg-primary text-primary-foreground flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium">
+            AD
           </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">Administración</span>
+            <span className="text-muted-foreground text-xs">
+              Horario de atención: lun a vie, 9:00 a 18:00 h
+            </span>
+          </div>
+        </header>
 
-          <WhatsAppButton mensaje={mensaje} className="w-fit" />
+        <div className="flex h-[420px] flex-col gap-3 overflow-y-auto p-4">
+          {isLoading && (
+            <p className="text-muted-foreground text-sm">Cargando conversación…</p>
+          )}
+          {isError && (
+            <p className="text-destructive text-sm">No se pudo cargar la conversación.</p>
+          )}
+          {mensajes.map((mensaje) => (
+            <MensajeBubble key={mensaje.id} mensaje={mensaje} />
+          ))}
+          <div ref={finRef} />
+        </div>
 
-          <p className="text-muted-foreground text-xs">
-            También puedes escribirnos directamente al {numeroAdministracionVisible()}.
-          </p>
-        </CardContent>
-      </Card>
+        <form onSubmit={handleSubmit} className="flex gap-2 border-t p-3">
+          <Input
+            value={texto}
+            onChange={(evento) => setTexto(evento.target.value)}
+            placeholder="Escribe un mensaje"
+            disabled={enviarMensaje.isPending}
+            aria-label="Mensaje"
+          />
+          <Button type="submit" disabled={!texto.trim() || enviarMensaje.isPending}>
+            <SendHorizontal className="size-4" />
+            Enviar
+          </Button>
+        </form>
+      </div>
     </div>
   )
 }
