@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { RESIDENTE_ACTUAL } from '@/shared/lib/residente-actual'
 import { EstadoBadge } from '../components/EstadoBadge'
 import { useResidentes } from '../hooks/use-residentes'
 
@@ -18,7 +19,7 @@ export function ResidentesPage() {
       <div>
         <h1 className="text-2xl font-semibold">Residentes</h1>
         <p className="text-muted-foreground text-sm">
-          Listado de residentes del condominio.
+          Personas que viven contigo en la unidad {RESIDENTE_ACTUAL.unidad}.
         </p>
       </div>
 
@@ -38,7 +39,6 @@ export function ResidentesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nombre</TableHead>
-                  <TableHead>Unidad</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Estado</TableHead>
                 </TableRow>
@@ -47,7 +47,6 @@ export function ResidentesPage() {
                 {residentes.map((residente) => (
                   <TableRow key={residente.id}>
                     <TableCell className="font-medium">{residente.nombre}</TableCell>
-                    <TableCell>{residente.unidad}</TableCell>
                     <TableCell>{residente.email}</TableCell>
                     <TableCell>
                       <EstadoBadge estado={residente.estado} />

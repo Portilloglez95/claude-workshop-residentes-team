@@ -5,16 +5,26 @@ import type { Residente } from '../types'
 // backend esté disponible. Se deja mockeado para que la UI se pueda construir
 // en paralelo sin depender de la API.
 //
-// Condoo administra varios condominios en la misma base de datos, así que
-// este mock incluye a propósito residentes de OTRO condominio ("Torres del
-// Bosque") junto a los del propio ("Las Palmas") para poder probar que el
-// filtro de abajo realmente los excluye.
+// Condoo administra varios condominios en la misma base de datos, y dentro
+// de cada condominio hay varias unidades con más de un residente (familia,
+// roommates). Este mock incluye a propósito personas de OTRA unidad ("B-204",
+// "C-305") y de OTRO condominio ("Torres del Bosque") junto a las de la
+// propia unidad para poder probar que el filtro de abajo realmente las
+// excluye.
 const MOCK_RESIDENTES: Residente[] = [
   {
     id: '1',
     nombre: 'María Pérez',
     unidad: 'A-101',
     email: 'maria@example.com',
+    estado: 'al_dia',
+    condominioId: 'las-palmas',
+  },
+  {
+    id: '1b',
+    nombre: 'Pedro Pérez',
+    unidad: 'A-101',
+    email: 'pedro@example.com',
     estado: 'al_dia',
     condominioId: 'las-palmas',
   },
@@ -55,12 +65,14 @@ const MOCK_RESIDENTES: Residente[] = [
 export async function fetchResidentes(): Promise<Residente[]> {
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  // Esto simula lo que un backend real debe hacer: acotar por
-  // condominio en el propio query, usando el tenant del token de
-  // sesión — nunca traer todos los residentes y filtrar en el
-  // cliente. Filtrar aquí es solo para que el mock se comporte igual
-  // que esa API ya acotada mientras no existe.
+  // Esto simula lo que un backend real debe hacer: acotar por condominio Y
+  // por unidad en el propio query (vía el tenant y la unidad del token de
+  // sesión) — nunca traer a todo el condominio y filtrar en el cliente. Es
+  // la vista de un residente, no la de administración: solo debe ver a
+  // quienes viven en su misma unidad.
   return MOCK_RESIDENTES.filter(
-    (residente) => residente.condominioId === RESIDENTE_ACTUAL.condominioId,
+    (residente) =>
+      residente.condominioId === RESIDENTE_ACTUAL.condominioId &&
+      residente.unidad === RESIDENTE_ACTUAL.unidad,
   )
 }
