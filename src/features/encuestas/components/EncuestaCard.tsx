@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CircleDot, Lock, TriangleAlert } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,6 +10,8 @@ import type { Encuesta } from '../types'
 import { useVotosStore } from '../store/use-votos-store'
 import { calcularResultados } from '../lib/calcular-resultados'
 import { estaCerrada, esUrgente } from '../lib/estado-encuesta'
+import { COLOR_ESTADO } from '../lib/paleta'
+import { useRevelarAlScroll } from '../hooks/use-revelar-al-scroll'
 import { OpcionesVotacion } from './OpcionesVotacion'
 import { ParticipacionEncuesta } from './ParticipacionEncuesta'
 import { PlazoEncuesta } from './PlazoEncuesta'
@@ -17,6 +20,7 @@ import { ResultadosEncuesta } from './ResultadosEncuesta'
 const LARGO_PREVIEW = 180
 
 export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
+  const { ref, visible } = useRevelarAlScroll<HTMLDivElement>()
   const votoLocal = useVotosStore((store) => store.votos[encuesta.id])
   const votar = useVotosStore((store) => store.votar)
   const [editando, setEditando] = useState(false)
@@ -45,14 +49,43 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
   }
 
   return (
-    <Card className={cn('transition-colors', urgente && 'border-foreground/25')}>
+    <Card
+      ref={ref}
+      className={cn(
+        'transition-[opacity,transform,border-color] duration-500 ease-out',
+        'motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
+        urgente && 'border-foreground/25',
+      )}
+    >
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={cerrada ? 'secondary' : 'default'}>
-              {cerrada ? 'Cerrada' : 'Abierta'}
-            </Badge>
-            {urgente && <Badge variant="outline">Por cerrar</Badge>}
+            {cerrada ? (
+              <Badge variant="secondary">
+                <Lock className="size-3" aria-hidden />
+                Cerrada
+              </Badge>
+            ) : (
+              <Badge variant="outline">
+                <CircleDot
+                  className="size-3"
+                  style={{ color: COLOR_ESTADO.bueno.claro }}
+                  aria-hidden
+                />
+                Abierta
+              </Badge>
+            )}
+            {urgente && (
+              <Badge variant="outline">
+                <TriangleAlert
+                  className="size-3"
+                  style={{ color: COLOR_ESTADO.advertencia.claro }}
+                  aria-hidden
+                />
+                Por cerrar
+              </Badge>
+            )}
             {!cerrada && opcionVotada !== null && !editando && (
               <Badge variant="outline">Ya votaste</Badge>
             )}

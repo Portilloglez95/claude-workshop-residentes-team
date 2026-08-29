@@ -1,22 +1,30 @@
 import { Check, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ResultadoOpcion } from '../lib/calcular-resultados'
+import { varsDeColor } from '../lib/paleta'
 
 function BarraResultado({
   resultado,
-  destacada,
+  indice,
   cerrada,
 }: {
   resultado: ResultadoOpcion
-  destacada: boolean
+  indice: number
   cerrada: boolean
 }) {
   const { opcion, votos, porcentaje, esVotoPropio, esGanadora } = resultado
+  // El color pertenece a la opción, no a su lugar en el ranking: la ganadora
+  // se destaca con ícono y peso, nunca recoloreándola.
+  const destacada = esVotoPropio || (cerrada && esGanadora)
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5" style={varsDeColor(indice)}>
       <div className="flex items-baseline justify-between gap-3 text-sm">
         <span className={cn('flex items-center gap-1.5', destacada && 'font-medium')}>
+          <span
+            className="size-2.5 shrink-0 rounded-[3px] bg-[var(--serie)] dark:bg-[var(--serie-oscuro)]"
+            aria-hidden
+          />
           {esVotoPropio && <Check className="size-3.5 shrink-0" aria-label="Tu voto" />}
           {cerrada && esGanadora && !esVotoPropio && (
             <Trophy className="size-3.5 shrink-0" aria-label="Opción más votada" />
@@ -31,11 +39,12 @@ function BarraResultado({
         </span>
       </div>
 
-      <div className="bg-muted h-2 overflow-hidden rounded-full">
+      <div className="bg-muted h-2.5 overflow-hidden rounded-[4px]">
         <div
           className={cn(
-            'h-full rounded-full transition-[width] duration-700 ease-out',
-            destacada ? 'bg-foreground' : 'bg-muted-foreground/35',
+            'h-full rounded-[4px] bg-[var(--serie)] dark:bg-[var(--serie-oscuro)]',
+            'transition-[width] duration-700 ease-out motion-reduce:transition-none',
+            !destacada && 'opacity-70',
           )}
           style={{ width: `${porcentaje}%` }}
         />
@@ -54,12 +63,11 @@ export function ResultadosEncuesta({
   return (
     // `aria-live` para que el lector de pantalla anuncie el conteo nuevo al votar.
     <div className="flex flex-col gap-3" aria-live="polite">
-      {resultados.map((resultado) => (
+      {resultados.map((resultado, indice) => (
         <BarraResultado
           key={resultado.opcion.id}
           resultado={resultado}
-          // Abierta: se destaca tu voto. Cerrada: se destaca la ganadora.
-          destacada={cerrada ? resultado.esGanadora : resultado.esVotoPropio}
+          indice={indice}
           cerrada={cerrada}
         />
       ))}
