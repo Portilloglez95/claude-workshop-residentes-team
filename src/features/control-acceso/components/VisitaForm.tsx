@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { MotivoVisita, Rol } from '../types'
+import type { MotivoVisita } from '../types'
 import { MOTIVOS_VISITA } from '../lib/motivo-visita'
 import { RESIDENTE_ACTUAL } from '../lib/residente-actual'
 import { useControlAccesoStore } from '../store/use-control-acceso-store'
@@ -21,16 +21,18 @@ import { FotoInput } from './FotoInput'
 
 const schema = z.object({
   nombre: z.string().min(1, 'Nombre del visitante'),
-  unidadDestino: z.string().min(1, 'Indica la unidad'),
-  residenteDestino: z.string().min(1, 'Indica el residente'),
   identificacion: z.string(),
 })
 
 type FormValues = z.infer<typeof schema>
 
-export function VisitaForm({ rol }: { rol: Rol }) {
-  const crearVisita = useControlAccesoStore((s) => s.crearVisita)
-  const esResidente = rol === 'residente'
+/**
+ * Pre-autorización de visita por el residente. Adjunta foto del visitante
+ * y/o de su identificación para que portería lo identifique al llegar sin
+ * pedirle la ID física.
+ */
+export function VisitaForm() {
+  const preautorizarVisita = useControlAccesoStore((s) => s.preautorizarVisita)
 
   const [motivo, setMotivo] = useState<MotivoVisita>('personal')
   const [fotoVisitante, setFotoVisitante] = useState<string | null>(null)
@@ -43,32 +45,18 @@ export function VisitaForm({ rol }: { rol: Rol }) {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      nombre: '',
-      unidadDestino: esResidente ? RESIDENTE_ACTUAL.unidad : '',
-      residenteDestino: esResidente ? RESIDENTE_ACTUAL.nombre : '',
-      identificacion: '',
-    },
+    defaultValues: { nombre: '', identificacion: '' },
   })
 
   const onSubmit = handleSubmit((data) => {
-    crearVisita(
-      {
-        nombre: data.nombre,
-        unidadDestino: data.unidadDestino,
-        residenteDestino: data.residenteDestino,
-        motivo,
-        identificacion: data.identificacion,
-        fotoVisitante,
-        fotoId,
-      },
-      rol,
-    )
-    toast.success(
-      esResidente
-        ? `Visita de ${data.nombre} pre-autorizada. Portería ya la puede ver.`
-        : `Entrada de ${data.nombre} registrada.`,
-    )
+    preautorizarVisita({
+      nombre: data.nombre,
+      motivo,
+      identificacion: data.identificacion,
+      fotoVisitante,
+      fotoId,
+    })
+    toast.success(`Visita de ${data.nombre} pre-autorizada. Portería la verá al llegar.`)
     reset()
     setMotivo('personal')
     setFotoVisitante(null)
@@ -89,38 +77,9 @@ export function VisitaForm({ rol }: { rol: Rol }) {
         )}
       </div>
 
-      {esResidente ? (
-        <p className="text-muted-foreground text-xs">
-          Visita para tu unidad: {RESIDENTE_ACTUAL.nombre} · {RESIDENTE_ACTUAL.unidad}
-        </p>
-      ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="vis-unidad">Unidad destino</Label>
-            <Input
-              id="vis-unidad"
-              placeholder="Ej. C-305"
-              {...register('unidadDestino')}
-            />
-            {errors.unidadDestino && (
-              <p className="text-destructive text-xs">{errors.unidadDestino.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="vis-residente">Residente</Label>
-            <Input
-              id="vis-residente"
-              placeholder="Ej. Ana Torres"
-              {...register('residenteDestino')}
-            />
-            {errors.residenteDestino && (
-              <p className="text-destructive text-xs">
-                {errors.residenteDestino.message}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
+      <p className="text-muted-foreground text-xs">
+        Visita para tu unidad: {RESIDENTE_ACTUAL.nombre} · {RESIDENTE_ACTUAL.unidad}
+      </p>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="vis-motivo">Motivo</Label>
@@ -147,12 +106,10 @@ export function VisitaForm({ rol }: { rol: Rol }) {
         />
       </div>
 
-      {esResidente && (
-        <p className="text-muted-foreground text-xs">
-          Agrega una foto del visitante o de su identificación para que portería lo
-          reconozca sin pedirle la ID física.
-        </p>
-      )}
+      <p className="text-muted-foreground text-xs">
+        Agrega una foto del visitante o de su identificación para que portería lo
+        reconozca sin pedirle la ID física.
+      </p>
 
       <FotoInput
         id="vis-foto-visitante"
@@ -168,7 +125,7 @@ export function VisitaForm({ rol }: { rol: Rol }) {
       />
 
       <Button type="submit" disabled={isSubmitting} className="mt-1 self-start">
-        {esResidente ? 'Pre-autorizar visita' : 'Registrar entrada'}
+        Pre-autorizar visita
       </Button>
     </form>
   )

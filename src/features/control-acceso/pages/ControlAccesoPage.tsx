@@ -1,27 +1,19 @@
 import { Package, Users } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { RESIDENTE_ACTUAL } from '../lib/residente-actual'
-import { useControlAccesoStore } from '../store/use-control-acceso-store'
 import { PaqueteriaTab } from '../components/PaqueteriaTab'
-import { RolToggle } from '../components/RolToggle'
 import { VisitasTab } from '../components/VisitasTab'
 
 export function ControlAccesoPage() {
-  const rol = useControlAccesoStore((s) => s.rol)
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Control de acceso</h1>
-          <p className="text-muted-foreground text-sm">
-            Paquetería y visitas en portería.{' '}
-            {rol === 'porteria'
-              ? 'Vista de portería: registras y ves todo el condominio.'
-              : `Vista de residente: solo lo de ${RESIDENTE_ACTUAL.nombre} (${RESIDENTE_ACTUAL.unidad}).`}
-          </p>
-        </div>
-        <RolToggle />
+      <div>
+        <h1 className="text-2xl font-semibold">Control de acceso</h1>
+        <p className="text-muted-foreground text-sm">
+          Tus paquetes y visitas en portería — {RESIDENTE_ACTUAL.nombre},{' '}
+          {RESIDENTE_ACTUAL.unidad}. La operación de portería tendrá un acceso de
+          administrador aparte.
+        </p>
       </div>
 
       <Tabs defaultValue="paqueteria" className="gap-4">

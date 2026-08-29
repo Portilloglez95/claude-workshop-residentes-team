@@ -1,20 +1,8 @@
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import type { Paquete, Rol } from '../types'
+import type { Paquete } from '../types'
 import { formatFechaHora } from '../lib/format-fecha'
-import { useControlAccesoStore } from '../store/use-control-acceso-store'
 import { PaqueteEstadoBadge } from './PaqueteEstadoBadge'
 
-export function PaqueteItem({ paquete, rol }: { paquete: Paquete; rol: Rol }) {
-  const marcarEntregado = useControlAccesoStore((s) => s.marcarEntregado)
-
-  const puedeEntregar = rol === 'porteria' && paquete.estado === 'pendiente'
-
-  function onEntregar() {
-    marcarEntregado(paquete.id)
-    toast.success(`Paquete de ${paquete.mensajeria} marcado como entregado.`)
-  }
-
+export function PaqueteItem({ paquete }: { paquete: Paquete }) {
   return (
     <li className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 py-3">
       <div className="flex min-w-0 flex-col gap-0.5">
@@ -28,12 +16,7 @@ export function PaqueteItem({ paquete, rol }: { paquete: Paquete; rol: Rol }) {
           )}
         </span>
         <span className="text-muted-foreground text-xs">
-          {rol === 'porteria' && (
-            <>
-              {paquete.residente} · {paquete.unidad} ·{' '}
-            </>
-          )}
-          Recibido {formatFechaHora(paquete.recibidoEn)}
+          Recibido en portería {formatFechaHora(paquete.recibidoEn)}
           {paquete.estado === 'entregado' && paquete.entregadoEn && (
             <> · Entregado {formatFechaHora(paquete.entregadoEn)}</>
           )}
@@ -43,14 +26,7 @@ export function PaqueteItem({ paquete, rol }: { paquete: Paquete; rol: Rol }) {
         )}
       </div>
 
-      <div className="flex items-center gap-2">
-        <PaqueteEstadoBadge estado={paquete.estado} />
-        {puedeEntregar && (
-          <Button type="button" variant="outline" size="sm" onClick={onEntregar}>
-            Marcar entregado
-          </Button>
-        )}
-      </div>
+      <PaqueteEstadoBadge estado={paquete.estado} />
     </li>
   )
 }

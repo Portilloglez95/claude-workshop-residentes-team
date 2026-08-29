@@ -1,3 +1,9 @@
 pnpm-lock.yaml
 dist
 node_modules
+
+# Generados/externos al código de la app: no son parte de src/ y no deben
+# reformatearse con el estilo de este repo (demos y bundles del canvas de
+# diseño, con su propio formato).
+demo-control-acceso
+design-system
