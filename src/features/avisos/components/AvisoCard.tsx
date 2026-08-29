@@ -3,8 +3,8 @@ import { ChevronDown, Pin } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { Aviso } from '../types'
+import { formatFecha } from '@/shared/lib/format-fecha'
 import { useAvisosLeidosStore } from '../store/use-avisos-leidos-store'
-import { formatFechaAviso } from '../lib/format-fecha'
 import { AvisoCategoriaBadge } from './AvisoCategoriaBadge'
 
 const LARGO_PREVIEW = 140
@@ -59,7 +59,7 @@ export function AvisoCard({ aviso }: { aviso: Aviso }) {
                 dateTime={aviso.fecha}
                 className="text-muted-foreground shrink-0 text-xs"
               >
-                {formatFechaAviso(aviso.fecha)}
+                {formatFecha(aviso.fecha)}
               </time>
             </span>
 
