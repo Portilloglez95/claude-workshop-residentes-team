@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Building2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { Navigate, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,6 +14,8 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { PASSWORD_DEMO, USUARIOS_DEMO } from '../data/usuarios-demo'
+import { useAuthStore } from '../store/use-auth-store'
 
 const loginSchema = z.object({
   email: z.email('Ingresa un email válido'),
@@ -19,27 +24,47 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
-// Ejemplo de patrón de formulario con react-hook-form + zod, sin depender
-// del componente `form` de shadcn (no disponible en este registro). Usa
-// este mismo patrón para el resto de formularios de la app.
 export function LoginPage() {
+  const usuario = useAuthStore((s) => s.usuario)
+  const login = useAuthStore((s) => s.login)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [errorCredenciales, setErrorCredenciales] = useState<string | null>(null)
+
+  const destino = (location.state as { from?: string } | null)?.from ?? '/'
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
 
+  if (usuario) return <Navigate to={destino} replace />
+
   const onSubmit = handleSubmit((data) => {
-    // TODO: conectar con el endpoint de autenticación real.
-    console.log('login', data)
+    if (!login(data.email, data.password)) {
+      setErrorCredenciales('Email o contraseña incorrectos.')
+      return
+    }
+    navigate(destino, { replace: true })
   })
 
+  function usarDemo(email: string) {
+    setValue('email', email)
+    setValue('password', PASSWORD_DEMO)
+    setErrorCredenciales(null)
+  }
+
   return (
-    <div className="flex h-svh items-center justify-center p-4">
+    <div className="flex min-h-svh items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Iniciar sesión</CardTitle>
-          <CardDescription>Panel de administración de condominios</CardDescription>
+          <div className="flex items-center gap-2">
+            <Building2 className="size-5" />
+            <CardTitle>Condoo</CardTitle>
+          </div>
+          <CardDescription>Portal del residente</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
@@ -69,10 +94,35 @@ export function LoginPage() {
               )}
             </div>
 
+            {errorCredenciales && (
+              <p className="text-destructive text-sm">{errorCredenciales}</p>
+            )}
+
             <Button type="submit" disabled={isSubmitting} className="mt-2">
               Entrar
             </Button>
           </form>
+
+          <div className="mt-6 border-t pt-4">
+            <p className="text-muted-foreground mb-2 text-xs font-medium">
+              Usuarios de demo · contraseña{' '}
+              <span className="font-mono">{PASSWORD_DEMO}</span>
+            </p>
+            <ul className="flex flex-col gap-1">
+              {USUARIOS_DEMO.map((u) => (
+                <li key={u.id}>
+                  <button
+                    type="button"
+                    onClick={() => usarDemo(u.email)}
+                    className="text-muted-foreground hover:text-foreground text-left text-xs"
+                  >
+                    <span className="font-mono">{u.email}</span> — {u.nombre}
+                    {u.unidad ? ` · ${u.unidad}` : ' · administración'}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>
