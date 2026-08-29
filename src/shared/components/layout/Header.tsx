@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react'
+import { SignOut } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -51,7 +51,7 @@ export function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={cerrarSesion}>
-                <LogOut />
+                <SignOut />
                 Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>

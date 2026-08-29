@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Building2 } from 'lucide-react'
+import { Buildings } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
@@ -61,7 +61,7 @@ export function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Building2 className="size-5" />
+            <Buildings className="size-5" />
             <CardTitle>Condoo</CardTitle>
           </div>
           <CardDescription>Portal del residente</CardDescription>
