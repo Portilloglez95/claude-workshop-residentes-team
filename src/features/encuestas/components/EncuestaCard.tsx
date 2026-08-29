@@ -4,13 +4,13 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { COLOR_ICONO_ESTADO } from '@/shared/lib/estado-visual'
 import type { Encuesta } from '../types'
 import { useVotosStore } from '../store/use-votos-store'
 import { calcularResultados } from '../lib/calcular-resultados'
 import { estaCerrada, esUrgente } from '../lib/estado-encuesta'
-import { COLOR_ESTADO } from '../lib/paleta'
-import { useRevelarAlScroll } from '../hooks/use-revelar-al-scroll'
 import { OpcionesVotacion } from './OpcionesVotacion'
 import { ParticipacionEncuesta } from './ParticipacionEncuesta'
 import { PlazoEncuesta } from './PlazoEncuesta'
@@ -19,7 +19,6 @@ import { ResultadosEncuesta } from './ResultadosEncuesta'
 const LARGO_PREVIEW = 180
 
 export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
-  const { ref, visible } = useRevelarAlScroll<HTMLDivElement>()
   const votoLocal = useVotosStore((store) => store.votos[encuesta.id])
   const votar = useVotosStore((store) => store.votar)
   const [editando, setEditando] = useState(false)
@@ -48,38 +47,28 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
   }
 
   return (
-    <Card
-      ref={ref}
-      className={cn(
-        'rounded-[20px] border-0 bg-[var(--tarjeta)] p-1.5 shadow-[var(--sombra)] ring-0',
-        'transition-[opacity,transform] duration-500 ease-out',
-        'motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none',
-        visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
-      )}
-    >
+    <Card>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             {cerrada ? (
-              <Badge variant="secondary">
-                <Lock className="size-3" aria-hidden />
+              <Badge variant="outline" className="gap-1.5 font-normal">
+                <Lock className={cn('size-3', COLOR_ICONO_ESTADO.neutral)} aria-hidden />
                 Cerrada
               </Badge>
             ) : (
-              <Badge variant="outline">
+              <Badge variant="outline" className="gap-1.5 font-normal">
                 <CircleDot
-                  className="size-3"
-                  style={{ color: COLOR_ESTADO.bueno.claro }}
+                  className={cn('size-3', COLOR_ICONO_ESTADO.bueno)}
                   aria-hidden
                 />
                 Abierta
               </Badge>
             )}
             {urgente && (
-              <Badge variant="outline">
+              <Badge variant="outline" className="gap-1.5 font-normal">
                 <TriangleAlert
-                  className="size-3"
-                  style={{ color: COLOR_ESTADO.advertencia.claro }}
+                  className={cn('size-3', COLOR_ICONO_ESTADO.advertencia)}
                   aria-hidden
                 />
                 Por cerrar
@@ -94,13 +83,13 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             {encuesta.pregunta}
           </h2>
 
-          <p className="text-sm leading-[22px] text-[var(--tinta-suave)]">
+          <p className="text-muted-foreground text-sm">
             {descripcion}
             {descripcionLarga && (
               <button
                 type="button"
                 onClick={() => setExpandida((valor) => !valor)}
-                className="ml-1 font-semibold text-[var(--acento)] underline-offset-4 hover:underline"
+                className="text-primary ml-1 font-medium underline-offset-4 hover:underline"
               >
                 {expandida ? 'Leer menos' : 'Leer más'}
               </button>
@@ -108,7 +97,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
           </p>
         </div>
 
-        <div className="h-px bg-[var(--linea-tenue)]" />
+        <Separator />
 
         {mostrarResultados ? (
           <div className="flex flex-col gap-3">
@@ -142,7 +131,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
           />
         )}
 
-        <div className="h-px bg-[var(--linea-tenue)]" />
+        <Separator />
 
         <div className="flex flex-col gap-2">
           <ParticipacionEncuesta
@@ -151,7 +140,7 @@ export function EncuestaCard({ encuesta }: { encuesta: Encuesta }) {
             exigeQuorum={encuesta.quorumRequerido > 0}
             cerrada={cerrada}
           />
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--tinta-suave)]">
+          <div className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
             <PlazoEncuesta
               fechaCierre={encuesta.fechaCierre}
               cerrada={cerrada}

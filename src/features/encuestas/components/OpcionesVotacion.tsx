@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { OpcionEncuesta } from '../types'
-import { varsDeColor } from '../lib/paleta'
 
 /**
  * Selección de una opción y confirmación explícita. El voto no se emite al
@@ -67,27 +66,22 @@ export function OpcionesVotacion({
               tabIndex={indice === indiceFocal ? 0 : -1}
               onClick={() => setSeleccion(opcion.id)}
               onKeyDown={(evento) => moverFoco(evento, indice)}
-              style={varsDeColor(indice)}
               className={cn(
-                'group flex items-center gap-3 rounded-[14px] border-[1.5px] px-4 py-3.5 text-left text-[15px]',
+                'group flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm',
                 'focus-visible:ring-ring/50 transition-colors focus-visible:ring-3 focus-visible:outline-none',
                 elegida
-                  ? 'bg-muted/50 border-[var(--serie)] font-medium dark:border-[var(--serie-oscuro)]'
-                  : 'border-[var(--linea)] hover:border-[var(--acento)]/40',
+                  ? 'bg-muted/50 border-primary font-medium'
+                  : 'border-border hover:border-primary/40',
               )}
             >
               <span
                 className={cn(
                   'flex size-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors',
-                  elegida
-                    ? 'border-[var(--serie)] dark:border-[var(--serie-oscuro)]'
-                    : 'border-[var(--linea)]',
+                  elegida ? 'border-primary' : 'border-border',
                 )}
                 aria-hidden
               >
-                {elegida && (
-                  <span className="size-2 rounded-full bg-[var(--serie)] dark:bg-[var(--serie-oscuro)]" />
-                )}
+                {elegida && <span className="bg-primary size-2 rounded-full" />}
               </span>
               {opcion.texto}
             </button>
@@ -101,7 +95,7 @@ export function OpcionesVotacion({
           size="sm"
           disabled={!cambiado}
           onClick={() => seleccion && onConfirmar(seleccion)}
-          className="h-11 flex-grow rounded-[14px] bg-[var(--acento)] text-[15px] font-semibold text-[var(--acento-contraste)] hover:bg-[var(--acento)]/90"
+          className="h-9 flex-grow"
         >
           {votoActual === null ? 'Enviar voto' : 'Guardar cambio'}
         </Button>

@@ -1,16 +1,13 @@
 import { CircleCheck, TriangleAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Meter } from '@/shared/components/charts/Meter'
+import { COLOR_ICONO_ESTADO, type NivelEstado } from '@/shared/lib/estado-visual'
 import type { ResultadosEncuesta } from '../lib/calcular-resultados'
-import { COLOR_ESTADO } from '../lib/paleta'
 
 /**
  * Participación sobre el padrón y estado del quórum. En un condominio el
  * quórum decide si el resultado es vinculante, así que se muestra siempre
  * que la encuesta lo exija.
- *
- * El color de estado nunca va solo: siempre acompañado de ícono y texto. El
- * ámbar de advertencia queda bajo 3:1 sobre blanco, y esa es justamente la
- * mitigación que exige la paleta de estados.
  */
 export function ParticipacionEncuesta({
   resultados,
@@ -24,49 +21,30 @@ export function ParticipacionEncuesta({
   cerrada: boolean
 }) {
   const { totalVotos, participacion, quorumAlcanzado, votosParaQuorum } = resultados
-  const color = quorumAlcanzado ? COLOR_ESTADO.bueno : COLOR_ESTADO.advertencia
+  const nivel: NivelEstado = !exigeQuorum
+    ? 'neutral'
+    : quorumAlcanzado
+      ? 'bueno'
+      : 'advertencia'
   const Icono = quorumAlcanzado ? CircleCheck : TriangleAlert
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-3 text-xs text-[var(--tinta-suave)]">
-        <span>
-          <span className="text-[15px] font-bold text-[var(--tinta)] tabular-nums">
-            {totalVotos}
-          </span>{' '}
-          de {totalElegibles} vecinos
-        </span>
-        <span className="tabular-nums">{participacion}% de participación</span>
-      </div>
-
-      <div className="h-2 overflow-hidden rounded-full bg-[var(--pista)]" aria-hidden>
-        <div
-          className={cn(
-            'h-full rounded-full transition-[width] duration-700 ease-out',
-            'motion-reduce:transition-none',
-            // Sin quórum exigido la barra es informativa: tono neutro, sin
-            // sugerir que hay un umbral que cumplir.
-            !exigeQuorum && 'bg-[var(--tinta-suave)]/50',
-          )}
-          style={{
-            width: `${participacion}%`,
-            backgroundColor: exigeQuorum ? color.claro : undefined,
-          }}
-        />
-      </div>
+      <Meter
+        label={`${totalVotos} de ${totalElegibles} vecinos`}
+        valor={totalVotos}
+        maximo={totalElegibles}
+        textoValor={`${participacion}% de participación`}
+        nivel={nivel}
+      />
 
       {exigeQuorum && (
         <p className="flex items-start gap-1.5 text-xs">
           <Icono
-            className="mt-px size-3.5 shrink-0"
-            style={{ color: color.claro }}
+            className={cn('mt-px size-3.5 shrink-0', COLOR_ICONO_ESTADO[nivel])}
             aria-hidden
           />
-          <span
-            className={
-              quorumAlcanzado ? 'text-[var(--tinta-suave)]' : 'text-[var(--tinta)]'
-            }
-          >
+          <span className={quorumAlcanzado ? 'text-muted-foreground' : 'text-foreground'}>
             {quorumAlcanzado
               ? 'Quórum alcanzado — el resultado es vinculante.'
               : cerrada

@@ -15,9 +15,9 @@
  * ilegible). Si algún día se pinta texto con estos valores, hay que
  * re-escalonar el ámbar antes.
  *
- * TODO: `src/features/encuestas/lib/paleta.ts` define su propio `COLOR_ESTADO`
- * con los mismos hex. Al tocar encuestas conviene plegarlo aquí para tener una
- * sola fuente de verdad; se dejó intacto para no generar conflictos de merge.
+ * `encuestas` tenía su propio `COLOR_ESTADO` con los mismos hex (en
+ * `lib/paleta.ts`); se plegó aquí al emparejar el estilo de esa página con
+ * el resto de la app, así que esta es ahora la única fuente de verdad.
  */
 export type NivelEstado = 'bueno' | 'advertencia' | 'critico' | 'neutral'
 
