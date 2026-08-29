@@ -3,6 +3,7 @@ import { AppLayout } from '@/shared/components/layout/AppLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { AvisosPage } from '@/features/avisos/pages/AvisosPage'
 import { EncuestasPage } from '@/features/encuestas/pages/EncuestasPage'
+import { MorosidadPage } from '@/features/morosidad/pages/MorosidadPage'
 import { PagosPage } from '@/features/pagos/pages/PagosPage'
 import { ReservasPage } from '@/features/reservas/pages/ReservasPage'
 import { ResidentesPage } from '@/features/residentes/pages/ResidentesPage'
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: 'residentes', element: <ResidentesPage /> },
       { path: 'pagos', element: <PagosPage /> },
+      { path: 'morosidad', element: <MorosidadPage /> },
       { path: 'reservas', element: <ReservasPage /> },
       { path: 'avisos', element: <AvisosPage /> },
       { path: 'encuestas', element: <EncuestasPage /> },
